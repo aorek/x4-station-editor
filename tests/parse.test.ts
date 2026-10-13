@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseConstructionPlans, PlanParseError } from "../src/plan/parse";
 import { summarizePlan } from "../src/plan/summary";
 
-const sample = readFileSync(new URL("../src/samples/ARG_EnCells_2C.xml", import.meta.url), "utf8");
+const sample = readFileSync(resolve(__dirname, "../src/samples/ARG_EnCells_2C.xml"), "utf8");
 
 describe("parseConstructionPlans", () => {
   const [plan] = parseConstructionPlans(sample);
