@@ -11,8 +11,8 @@ Carga un plano exportado o el `constructionplans.xml` completo y muestra la esta
 ## Puesta en marcha
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Abre la URL que muestra Vite (normalmente http://localhost:5173). Arranca con el plano de ejemplo `ARG EnCells 2C`; usa **Abrir XML…** o arrastra un archivo al visor para cargar otro.
@@ -27,11 +27,11 @@ Documents\Egosoft\X4\<tu id>\constructionplans.xml
 
 | Comando | Qué hace |
 | --- | --- |
-| `npm run dev` | Servidor de desarrollo con recarga en caliente |
-| `npm run build` | Comprueba tipos y genera la versión de producción en `dist/` |
-| `npm run preview` | Sirve `dist/` para probar el build |
-| `npm run typecheck` | Solo comprobación de tipos |
-| `npm test` | Tests del parser y de las rotaciones |
+| `pnpm dev` | Servidor de desarrollo con recarga en caliente |
+| `pnpm build` | Comprueba tipos y genera la versión de producción en `dist/` |
+| `pnpm preview` | Sirve `dist/` para probar el build |
+| `pnpm typecheck` | Solo comprobación de tipos |
+| `pnpm test` | Tests del parser y de las rotaciones |
 
 ## Estructura
 
