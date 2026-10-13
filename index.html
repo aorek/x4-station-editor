@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visor de Planos X4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="panel">
+        <header>
+          <div class="eyebrow">Plano de construcción · X4</div>
+          <h1 id="plan-name">—</h1>
+          <select id="plan-select" class="plan-select" aria-label="Elegir plano" hidden></select>
+        </header>
+
+        <div class="stats">
+          <div class="stat"><b id="stat-modules">0</b><span>módulos</span></div>
+          <div class="stat"><b id="stat-production">0</b><span>producción</span></div>
+          <div class="stat"><b id="stat-size">0</b><span>tamaño (km)</span></div>
+        </div>
+
+        <section>
+          <h2>Tipos de módulo</h2>
+          <ul class="legend" id="legend"></ul>
+        </section>
+
+        <section id="production-section">
+          <h2>Producción</h2>
+          <ul class="prodlist" id="production-list"></ul>
+        </section>
+
+        <section>
+          <h2>Módulo seleccionado</h2>
+          <div class="detail" id="detail"></div>
+        </section>
+
+        <section class="tools">
+          <button class="btn primary" id="open-file" type="button">Abrir XML…</button>
+          <button class="btn" id="fit" type="button">Encuadrar</button>
+          <label class="toggle"><input type="checkbox" id="show-links" checked /> Conexiones</label>
+          <input type="file" id="file-input" accept=".xml,text/xml" hidden />
+          <p class="error" id="error" role="alert" hidden></p>
+        </section>
+
+        <p class="note">
+          Los módulos se dibujan como formas aproximadas. Posiciones y rotaciones salen del plano; los tamaños
+          están estimados. Admite un plano suelto o el <code>constructionplans.xml</code> completo.
+        </p>
+      </aside>
+
+      <main class="view" id="view">
+        <div id="canvas-host"></div>
+        <div class="tip" id="tip" hidden></div>
+        <div class="hint">Arrastra para girar · rueda para zoom · clic derecho para desplazar</div>
+        <div class="drop" id="drop" hidden>Suelta el XML aquí</div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
