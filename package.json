@@ -9,7 +9,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "extract-game-data": "node scripts/extract-game-data.mjs"
   },
   "dependencies": {
     "three": "^0.169.0"
