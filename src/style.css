@@ -167,8 +167,23 @@ h2 {
 
 .prodlist li {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px;
+  gap: 2px 8px;
+}
+
+.prodlist small {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.balance {
+  margin: 0;
+}
+
+.balance.short {
+  color: var(--danger);
 }
 
 .detail {
@@ -281,7 +296,54 @@ h2 {
   margin: 0;
 }
 
-/* ---------- Visor ---------- */
+.lang {
+  margin-top: auto;
+  display: flex;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.lang button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px 5px 7px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.lang button:hover {
+  color: var(--fg);
+}
+
+.lang button[aria-checked="true"] {
+  border-color: var(--line);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.lang button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.flag {
+  display: flex;
+}
+
+.flag svg {
+  width: 21px;
+  height: 14px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+/* ---------- Viewer ---------- */
 
 .view {
   position: relative;

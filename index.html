@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Visor de Planos X4</title>
+    <title>X4 Plan Viewer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="stylesheet"
@@ -14,51 +14,55 @@
     <div class="app">
       <aside class="panel">
         <header>
-          <div class="eyebrow">Plano de construcción · X4</div>
+          <div class="eyebrow" data-i18n="eyebrow"></div>
           <h1 id="plan-name">—</h1>
-          <select id="plan-select" class="plan-select" aria-label="Elegir plano" hidden></select>
+          <select id="plan-select" class="plan-select" data-i18n-aria-label="choosePlan" hidden></select>
         </header>
 
         <div class="stats">
-          <div class="stat"><b id="stat-modules">0</b><span>módulos</span></div>
-          <div class="stat"><b id="stat-production">0</b><span>producción</span></div>
-          <div class="stat"><b id="stat-size">0</b><span>tamaño (km)</span></div>
+          <div class="stat"><b id="stat-modules">0</b><span data-i18n="statModules"></span></div>
+          <div class="stat"><b id="stat-production">0</b><span data-i18n="statProduction"></span></div>
+          <div class="stat"><b id="stat-size">0</b><span data-i18n="statSize"></span></div>
         </div>
 
         <section>
-          <h2>Tipos de módulo</h2>
+          <h2 data-i18n="moduleTypes"></h2>
           <ul class="legend" id="legend"></ul>
         </section>
 
         <section id="production-section">
-          <h2>Producción</h2>
+          <h2 data-i18n="production"></h2>
           <ul class="prodlist" id="production-list"></ul>
         </section>
 
+        <section id="workforce-section">
+          <h2 data-i18n="workforce"></h2>
+          <p class="balance" id="workforce-balance"></p>
+        </section>
+
         <section>
-          <h2>Módulo seleccionado</h2>
+          <h2 data-i18n="selectedModule"></h2>
           <div class="detail" id="detail"></div>
         </section>
 
         <section class="tools">
-          <button class="btn primary" id="open-file" type="button">Abrir XML…</button>
-          <button class="btn" id="fit" type="button">Encuadrar</button>
-          <label class="toggle"><input type="checkbox" id="show-links" checked /> Conexiones</label>
+          <button class="btn primary" id="open-file" type="button" data-i18n="openXml"></button>
+          <button class="btn" id="fit" type="button" data-i18n="fit"></button>
+          <label class="toggle"><input type="checkbox" id="show-links" checked /> <span data-i18n="links"></span></label>
           <input type="file" id="file-input" accept=".xml,text/xml" hidden />
           <p class="error" id="error" role="alert" hidden></p>
         </section>
 
-        <p class="note">
-          Los módulos se dibujan como formas aproximadas. Posiciones y rotaciones salen del plano; los tamaños
-          están estimados. Admite un plano suelto o el <code>constructionplans.xml</code> completo.
-        </p>
+        <p class="note" data-i18n-html="note"></p>
+
+        <div class="lang" id="lang-select" role="radiogroup" data-i18n-aria-label="language"></div>
       </aside>
 
       <main class="view" id="view">
         <div id="canvas-host"></div>
         <div class="tip" id="tip" hidden></div>
-        <div class="hint">Arrastra para girar · rueda para zoom · clic derecho para desplazar</div>
-        <div class="drop" id="drop" hidden>Suelta el XML aquí</div>
+        <div class="hint" data-i18n="hint"></div>
+        <div class="drop" id="drop" hidden data-i18n="drop"></div>
       </main>
     </div>
     <script type="module" src="/src/main.ts"></script>

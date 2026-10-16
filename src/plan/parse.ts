@@ -1,8 +1,16 @@
 import type { ConstructionPlan, PlanEntry, Predecessor } from "./types";
 
+export type PlanParseErrorCode = "invalidXml" | "noPlans";
+
+const DEFAULT_MESSAGES: Record<PlanParseErrorCode, string> = {
+  invalidXml: "The file is not valid XML.",
+  noPlans: "No <plan> with modules was found in the file.",
+};
+
+/** Parse failure. `code` lets the UI show a translated message. */
 export class PlanParseError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(readonly code: PlanParseErrorCode) {
+    super(DEFAULT_MESSAGES[code]);
     this.name = "PlanParseError";
   }
 }
@@ -14,7 +22,7 @@ function num(el: Element | undefined, attr: string, fallback = 0): number {
   return Number.isFinite(value) ? value : fallback;
 }
 
-/** Hijos directos con un nombre de etiqueta dado (evita coger nodos anidados más profundos). */
+/** Direct children with a given tag name (avoids picking up deeper nested nodes). */
 function children(el: Element, tag: string): Element[] {
   return Array.from(el.children).filter((c) => c.tagName === tag);
 }
@@ -51,18 +59,20 @@ function parseEntry(el: Element): PlanEntry {
 }
 
 /**
- * Lee un XML de planos de X4. Acepta tanto un plano exportado suelto como el
- * `constructionplans.xml` completo de la carpeta de usuario.
+ * Reads an X4 construction plan XML. Accepts either a single exported plan or
+ * the full `constructionplans.xml` from the user folder.
+ *
+ * `name` falls back to the plan id, and is empty if the plan has neither.
  */
 export function parseConstructionPlans(xml: string): ConstructionPlan[] {
   let doc: Document;
   try {
     doc = new DOMParser().parseFromString(xml, "application/xml");
   } catch {
-    throw new PlanParseError("El archivo no es un XML válido.");
+    throw new PlanParseError("invalidXml");
   }
   if (doc.getElementsByTagName("parsererror").length > 0) {
-    throw new PlanParseError("El archivo no es un XML válido.");
+    throw new PlanParseError("invalidXml");
   }
 
   const plans = Array.from(doc.getElementsByTagName("plan"))
@@ -70,7 +80,7 @@ export function parseConstructionPlans(xml: string): ConstructionPlan[] {
       const id = plan.getAttribute("id") ?? "";
       return {
         id,
-        name: plan.getAttribute("name") || id || "Sin nombre",
+        name: plan.getAttribute("name") || id,
         description: plan.getAttribute("description") ?? "",
         entries: children(plan, "entry").map(parseEntry),
       };
@@ -78,7 +88,7 @@ export function parseConstructionPlans(xml: string): ConstructionPlan[] {
     .filter((plan) => plan.entries.length > 0);
 
   if (plans.length === 0) {
-    throw new PlanParseError("No se encontró ningún <plan> con módulos en el archivo.");
+    throw new PlanParseError("noPlans");
   }
   return plans;
 }

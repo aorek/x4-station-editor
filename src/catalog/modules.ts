@@ -1,10 +1,16 @@
 /**
- * Catálogo provisional de módulos.
+ * Module catalog.
  *
- * Los tamaños están ESTIMADOS a partir de las distancias entre módulos
- * conectados en planos reales. Cuando haya un extractor de datos del juego,
- * este archivo se sustituirá por medidas y puntos de anclaje reales.
+ * Dimensions, connection snaps and gameplay stats come from
+ * `modules.generated.json`, which `pnpm extract-game-data` builds from the
+ * game files. Macros missing from it (e.g. from mods) get an ESTIMATED shape
+ * based on the macro name and no stats.
+ *
+ * Nothing here is user-facing text: the i18n layer names modules from the
+ * game texts, or from `kind`, `size` and `ware` when there are none.
  */
+
+import generated from "./modules.generated.json";
 
 export type CategoryId =
   | "production"
@@ -18,19 +24,18 @@ export type CategoryId =
 
 export interface Category {
   id: CategoryId;
-  label: string;
   color: number;
 }
 
 export const CATEGORIES: Record<CategoryId, Category> = {
-  production: { id: "production", label: "Producción", color: 0xf0a64b },
-  storage: { id: "storage", label: "Almacenes", color: 0x4fb3a9 },
-  habitat: { id: "habitat", label: "Habitáculos", color: 0xe58fb0 },
-  structure: { id: "structure", label: "Estructura", color: 0x7f93ad },
-  dock: { id: "dock", label: "Muelles", color: 0x9d8cf0 },
-  pier: { id: "pier", label: "Embarcaderos", color: 0x6cb6f5 },
-  defence: { id: "defence", label: "Defensa", color: 0xe0614f },
-  other: { id: "other", label: "Otros", color: 0xb7b7b7 },
+  production: { id: "production", color: 0xf0a64b },
+  storage: { id: "storage", color: 0x4fb3a9 },
+  habitat: { id: "habitat", color: 0xe58fb0 },
+  structure: { id: "structure", color: 0x7f93ad },
+  dock: { id: "dock", color: 0x9d8cf0 },
+  pier: { id: "pier", color: 0x6cb6f5 },
+  defence: { id: "defence", color: 0xe0614f },
+  other: { id: "other", color: 0xb7b7b7 },
 };
 
 export const CATEGORY_ORDER: CategoryId[] = [
@@ -44,83 +49,108 @@ export const CATEGORY_ORDER: CategoryId[] = [
   "other",
 ];
 
-/** Forma aproximada. `size` es [x, y, z] en metros en el espacio local del módulo. */
+/** What a module is, used to pick its display name. */
+export type ModuleKind =
+  | "production"
+  | "storage"
+  | "storageContainer"
+  | "storageLiquid"
+  | "storageSolid"
+  | "habitat"
+  | "crossConnector"
+  | "verticalConnectorShort"
+  | "verticalConnectorLong"
+  | "straightConnectorShort"
+  | "straightConnectorLong"
+  | "structure"
+  | "dock"
+  | "pier"
+  | "harborPier"
+  | "defence"
+  | "other";
+
+export type SizeClass = "s" | "m" | "l" | "xl";
+
+export type Vec3Tuple = [x: number, y: number, z: number];
+
+/**
+ * Module shape in its local space, in metres: `size` is [x, y, z] and
+ * `center` is the shape's centre relative to the module origin (0 by default).
+ */
 export interface ModuleShape {
   kind: "box" | "cylinderY" | "cylinderZ";
-  size: [number, number, number];
+  size: Vec3Tuple;
+  center?: Vec3Tuple;
 }
+
+/** Connection snap in the module's local space (X4 coordinates). */
+export interface ModuleSnap {
+  position: Vec3Tuple;
+  quaternion: [x: number, y: number, z: number, w: number];
+}
+
+/** Mount size as the game tags it. */
+export type MountSize = "small" | "medium" | "large" | "extralarge";
+
+/** Gameplay properties from the game data. Absent fields do not apply to the module. */
+export interface ModuleStats {
+  /** Race id of the maker (`argon`, `teladi`…). */
+  race?: string;
+  hull?: number;
+  /** Workers a habitat houses, and of which race. */
+  workforce?: { capacity: number; race: string | null };
+  /** Workers a production module needs to reach full output. */
+  workforceNeeded?: number;
+  /** Storage capacity in m³ and the transport types it takes (`container`, `liquid`, `solid`…). */
+  cargo?: { capacity: number; types: string[] };
+  /** Wares produced and the recipe (`method`) each one uses. */
+  production?: Array<{ ware: string; method: string }>;
+  /** External docking bays by ship size group (`"s"`, `"m"`, `"l+xl"`…). */
+  docks?: Record<string, number>;
+  turrets?: Partial<Record<MountSize, number>>;
+  shields?: Partial<Record<MountSize, number>>;
+}
+
+interface GeneratedModule extends ModuleStats {
+  class: string;
+  box: { center: Vec3Tuple; size: Vec3Tuple };
+  snaps: Record<string, ModuleSnap>;
+}
+
+const GAME_DATA = generated as unknown as Record<string, GeneratedModule>;
+
+const CLASS_CATEGORY: Record<string, CategoryId> = {
+  production: "production",
+  storage: "storage",
+  habitation: "habitat",
+  connectionmodule: "structure",
+  dockarea: "dock",
+  pier: "pier",
+  defencemodule: "defence",
+};
 
 export interface ModuleInfo {
   macro: string;
   category: CategoryId;
-  name: string;
-  /** Mercancía producida, solo para módulos de producción. */
+  kind: ModuleKind;
+  /** Size class shown next to the name (storage, habitats, docks), or null. */
+  size: SizeClass | null;
+  /** Id of the ware produced (e.g. `energycells`), production modules only. */
   ware?: string;
   shape: ModuleShape;
+  /** `true` if shape and snaps come from game data; `false` if estimated. */
+  measured: boolean;
+  /** Connection snaps by lowercase name (`connectionsnap001`…). Empty without game data. */
+  snaps: Record<string, ModuleSnap>;
+  /** Gameplay stats; empty without game data. */
+  stats: ModuleStats;
 }
 
-const WARES: Record<string, string> = {
-  advancedcomposites: "Compuestos avanzados",
-  advancedelectronics: "Electrónica avanzada",
-  antimattercells: "Celdas de antimateria",
-  antimatterconverters: "Convertidores de antimateria",
-  bogas: "Bogas",
-  bofu: "Bofu",
-  cheltmeat: "Carne de Chelt",
-  claytronics: "Claytrónica",
-  computronicsubstrate: "Sustrato computrónico",
-  dronecomponents: "Componentes de dron",
-  energycells: "Celdas de energía",
-  engineparts: "Piezas de motor",
-  fieldcoils: "Bobinas de campo",
-  foodrations: "Raciones de comida",
-  graphene: "Grafeno",
-  hullparts: "Piezas de casco",
-  majadust: "Polvo Maja",
-  majasnails: "Caracoles Maja",
-  meat: "Carne",
-  medicalsupplies: "Suministros médicos",
-  metallicmicrolattice: "Microrretícula metálica",
-  microchips: "Microchips",
-  missilecomponents: "Componentes de misil",
-  nostropoil: "Aceite Nostrop",
-  plankton: "Plancton",
-  plasmaconductors: "Conductores de plasma",
-  proteinpaste: "Pasta proteica",
-  quantumtubes: "Tubos cuánticos",
-  refinedmetals: "Metales refinados",
-  scanningarrays: "Matrices de escaneo",
-  scruffinfruits: "Frutas Scruffin",
-  shieldcomponents: "Componentes de escudo",
-  siliconcarbide: "Carburo de silicio",
-  siliconwafers: "Obleas de silicio",
-  smartchips: "Chips inteligentes",
-  sojabeans: "Habas de soja",
-  sojahusk: "Cáscara de soja",
-  spacefuel: "Combustible espacial",
-  spices: "Especias",
-  stimulants: "Estimulantes",
-  sunriseflowers: "Flores Amanecer",
-  superfluidcoolant: "Refrigerante superfluido",
-  swampplant: "Planta de pantano",
-  terranmre: "Raciones terranas",
-  turretcomponents: "Componentes de torreta",
-  water: "Agua",
-  weaponcomponents: "Componentes de armas",
-  wheat: "Trigo",
-};
+type EstimatedInfo = Omit<ModuleInfo, "measured" | "snaps" | "stats">;
 
-type SizeClass = "s" | "m" | "l" | "xl" | null;
-
-function sizeClass(id: string): SizeClass {
+function sizeClass(id: string): SizeClass | null {
   const match = id.match(/_(xl|s|m|l)_/);
   return (match?.[1] as SizeClass) ?? null;
-}
-
-const SIZE_LABEL: Record<Exclude<SizeClass, null>, string> = { s: "S", m: "M", l: "L", xl: "XL" };
-
-function withSize(name: string, size: SizeClass): string {
-  return size ? `${name} ${SIZE_LABEL[size]}` : name;
 }
 
 function box(x: number, y: number, z: number): ModuleShape {
@@ -128,82 +158,103 @@ function box(x: number, y: number, z: number): ModuleShape {
 }
 
 export function describeModule(macro: string): ModuleInfo {
+  const estimated = estimateModule(macro);
+  const data = GAME_DATA[macro.toLowerCase()];
+  if (!data) return { ...estimated, measured: false, snaps: {}, stats: {} };
+
+  const { class: cls, box, snaps, ...stats } = data;
+  const category = CLASS_CATEGORY[cls] ?? estimated.category;
+  const ware = stats.production?.[0]?.ware ?? estimated.ware;
+  return {
+    ...estimated,
+    category,
+    kind: category === "production" ? "production" : estimated.kind,
+    ...(ware ? { ware } : {}),
+    shape: { kind: "box", size: box.size, center: box.center },
+    measured: true,
+    snaps,
+    stats,
+  };
+}
+
+/** Info deduced from the macro name alone, with an approximate shape. */
+function estimateModule(macro: string): EstimatedInfo {
   const id = macro.toLowerCase().replace(/_macro$/, "");
   const size = sizeClass(id);
+  const base = { macro, size: null };
 
   if (id.startsWith("prod_")) {
-    // prod_<raza|gen>_<mercancía>[_variante]
-    const wareKey = id.split("_")[2] ?? "";
-    const ware = WARES[wareKey] ?? wareKey;
-    return { macro, category: "production", name: `Producción: ${ware}`, ware, shape: box(2400, 500, 500) };
+    // prod_<race|gen>_<ware>[_variant]
+    const ware = id.split("_")[2] || undefined;
+    return { ...base, category: "production", kind: "production", ware, shape: box(2400, 500, 500) };
   }
 
   if (id.startsWith("storage_")) {
-    const kind = id.includes("container")
-      ? "de contenedores"
+    const kind: ModuleKind = id.includes("container")
+      ? "storageContainer"
       : id.includes("liquid")
-        ? "de líquidos"
+        ? "storageLiquid"
         : id.includes("solid")
-          ? "de sólidos"
-          : "";
-    const name = withSize(["Almacén", kind].filter(Boolean).join(" "), size);
+          ? "storageSolid"
+          : "storage";
     const shape = size === "s" ? box(300, 300, 800) : size === "l" ? box(1200, 1200, 1200) : box(800, 800, 800);
-    return { macro, category: "storage", name, shape };
+    return { ...base, category: "storage", kind, size, shape };
   }
 
   if (id.startsWith("hab_")) {
     const diameter = size === "s" ? 600 : size === "l" ? 1300 : 950;
     return {
-      macro,
+      ...base,
       category: "habitat",
-      name: withSize("Habitáculo", size),
+      kind: "habitat",
+      size,
       shape: { kind: "cylinderY", size: [diameter, 800, diameter] },
     };
   }
 
   if (id.startsWith("struct_")) {
     const long = id.endsWith("_02");
-    if (id.includes("cross")) return { macro, category: "structure", name: "Conector en cruz", shape: box(400, 400, 400) };
+    if (id.includes("cross")) return { ...base, category: "structure", kind: "crossConnector", shape: box(400, 400, 400) };
     if (id.includes("vertical")) {
       return {
-        macro,
+        ...base,
         category: "structure",
-        name: `Conector vertical ${long ? "largo" : "corto"}`,
+        kind: long ? "verticalConnectorLong" : "verticalConnectorShort",
         shape: box(200, long ? 800 : 400, 200),
       };
     }
     if (id.includes("base")) {
       return {
-        macro,
+        ...base,
         category: "structure",
-        name: `Conector recto ${long ? "largo" : "corto"}`,
+        kind: long ? "straightConnectorLong" : "straightConnectorShort",
         shape: box(200, 200, long ? 800 : 400),
       };
     }
-    return { macro, category: "structure", name: "Estructura", shape: box(400, 400, 400) };
+    return { ...base, category: "structure", kind: "structure", shape: box(400, 400, 400) };
   }
 
   if (id.startsWith("dockarea_")) {
-    return { macro, category: "dock", name: withSize("Muelle de atraque", size), shape: box(400, 250, 1600) };
+    return { ...base, category: "dock", kind: "dock", size, shape: box(400, 250, 1600) };
   }
 
   if (id.startsWith("pier_")) {
     return {
-      macro,
+      ...base,
       category: "pier",
-      name: id.includes("harbor") ? "Embarcadero (puerto)" : "Embarcadero",
+      kind: id.includes("harbor") ? "harborPier" : "pier",
       shape: box(1200, 400, 1200),
     };
   }
 
   if (id.startsWith("defence_")) {
     return {
-      macro,
+      ...base,
       category: "defence",
-      name: "Plataforma de defensa",
+      kind: "defence",
       shape: { kind: "cylinderZ", size: [300, 300, 400] },
     };
   }
 
-  return { macro, category: "other", name: macro, shape: box(400, 400, 400) };
+  return { ...base, category: "other", kind: "other", shape: box(400, 400, 400) };
 }

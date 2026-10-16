@@ -1,0 +1,1274 @@
+{
+ "advancedcomposites": {
+  "transport": "container",
+  "volume": 32,
+  "price": {
+   "min": 432,
+   "average": 540,
+   "max": 648
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 54,
+    "inputs": {
+     "energycells": 50,
+     "graphene": 80,
+     "refinedmetals": 80
+    },
+    "workBonus": 0.34
+   },
+   "teladi": {
+    "time": 300,
+    "amount": 54,
+    "inputs": {
+     "energycells": 50,
+     "graphene": 80,
+     "teladianium": 58
+    },
+    "workBonus": 0.34
+   }
+  }
+ },
+ "advancedelectronics": {
+  "transport": "container",
+  "volume": 30,
+  "price": {
+   "min": 710,
+   "average": 1014,
+   "max": 1318
+  },
+  "recipes": {
+   "default": {
+    "time": 720,
+    "amount": 54,
+    "inputs": {
+     "energycells": 60,
+     "microchips": 44,
+     "quantumtubes": 20
+    },
+    "workBonus": 0.36
+   }
+  }
+ },
+ "antimattercells": {
+  "transport": "container",
+  "volume": 18,
+  "price": {
+   "min": 121,
+   "average": 202,
+   "max": 282
+  },
+  "recipes": {
+   "default": {
+    "time": 120,
+    "amount": 99,
+    "inputs": {
+     "energycells": 100,
+     "hydrogen": 320
+    },
+    "workBonus": 0.35
+   }
+  }
+ },
+ "antimatterconverters": {
+  "transport": "container",
+  "volume": 10,
+  "price": {
+   "min": 248,
+   "average": 354,
+   "max": 461
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 133,
+    "inputs": {
+     "advancedcomposites": 20,
+     "energycells": 80,
+     "microchips": 30
+    },
+    "workBonus": 0.39
+   }
+  }
+ },
+ "bofu": {
+  "transport": "container",
+  "volume": 4,
+  "price": {
+   "min": 61,
+   "average": 101,
+   "max": 142
+  },
+  "recipes": {
+   "default": {
+    "time": 240,
+    "amount": 82,
+    "inputs": {
+     "bogas": 40,
+     "energycells": 40,
+     "plankton": 120
+    },
+    "workBonus": 0.38
+   }
+  }
+ },
+ "bogas": {
+  "transport": "container",
+  "volume": 4,
+  "price": {
+   "min": 44,
+   "average": 73,
+   "max": 102
+  },
+  "recipes": {
+   "default": {
+    "time": 150,
+    "amount": 110,
+    "inputs": {
+     "energycells": 40,
+     "water": 100
+    },
+    "workBonus": 0.46
+   }
+  }
+ },
+ "cheltmeat": {
+  "transport": "container",
+  "volume": 7,
+  "price": {
+   "min": 31,
+   "average": 51,
+   "max": 72
+  },
+  "recipes": {
+   "default": {
+    "time": 450,
+    "amount": 209,
+    "inputs": {
+     "energycells": 50,
+     "water": 120
+    },
+    "workBonus": 0.6
+   }
+  }
+ },
+ "claytronics": {
+  "transport": "container",
+  "volume": 24,
+  "price": {
+   "min": 1734,
+   "average": 2040,
+   "max": 2346
+  },
+  "recipes": {
+   "default": {
+    "time": 900,
+    "amount": 108,
+    "inputs": {
+     "antimattercells": 100,
+     "energycells": 140,
+     "microchips": 160,
+     "quantumtubes": 100
+    },
+    "workBonus": 0.34
+   },
+   "recycling": {
+    "time": 300,
+    "amount": 60,
+    "inputs": {
+     "energycells": 12000,
+     "scrapmetal": 300
+    },
+    "workBonus": 0.34
+   }
+  }
+ },
+ "computronicsubstrate": {
+  "transport": "container",
+  "volume": 50,
+  "price": {
+   "min": 7452,
+   "average": 8280,
+   "max": 9108
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 98,
+    "inputs": {
+     "energycells": 4000,
+     "hydrogen": 2000,
+     "ore": 3000,
+     "silicon": 3000
+    },
+    "workBonus": 0.1
+   },
+   "recycling": {
+    "time": 300,
+    "amount": 50,
+    "inputs": {
+     "energycells": 12500,
+     "scrapmetal": 1000
+    },
+    "workBonus": 0.1
+   }
+  }
+ },
+ "condensate": {
+  "transport": "condensate",
+  "volume": 10,
+  "price": {
+   "min": 22500,
+   "average": 25000,
+   "max": 27500
+  },
+  "recipes": {}
+ },
+ "dronecomponents": {
+  "transport": "container",
+  "volume": 30,
+  "price": {
+   "min": 685,
+   "average": 914,
+   "max": 1142
+  },
+  "recipes": {
+   "default": {
+    "time": 1200,
+    "amount": 105,
+    "inputs": {
+     "energycells": 60,
+     "engineparts": 20,
+     "hullparts": 20,
+     "microchips": 20,
+     "scanningarrays": 40
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "energycells": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 10,
+   "average": 16,
+   "max": 22
+  },
+  "recipes": {
+   "default": {
+    "time": 60,
+    "amount": 175,
+    "inputs": {},
+    "workBonus": 0.43
+   }
+  }
+ },
+ "engineparts": {
+  "transport": "container",
+  "volume": 15,
+  "price": {
+   "min": 128,
+   "average": 182,
+   "max": 237
+  },
+  "recipes": {
+   "default": {
+    "time": 900,
+    "amount": 208,
+    "inputs": {
+     "antimattercells": 80,
+     "energycells": 60,
+     "refinedmetals": 96
+    },
+    "workBonus": 0.47
+   },
+   "teladi": {
+    "time": 900,
+    "amount": 208,
+    "inputs": {
+     "antimattercells": 80,
+     "energycells": 60,
+     "teladianium": 70
+    },
+    "workBonus": 0.47
+   }
+  }
+ },
+ "fieldcoils": {
+  "transport": "container",
+  "volume": 15,
+  "price": {
+   "min": 247,
+   "average": 412,
+   "max": 576
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 175,
+    "inputs": {
+     "energycells": 60,
+     "plasmaconductors": 40,
+     "quantumtubes": 43
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "foodrations": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 12,
+   "average": 21,
+   "max": 29
+  },
+  "recipes": {
+   "default": {
+    "time": 240,
+    "amount": 460,
+    "inputs": {
+     "energycells": 100,
+     "meat": 40,
+     "spices": 40,
+     "wheat": 40
+    },
+    "workBonus": 0.35
+   }
+  }
+ },
+ "graphene": {
+  "transport": "container",
+  "volume": 20,
+  "price": {
+   "min": 100,
+   "average": 166,
+   "max": 233
+  },
+  "recipes": {
+   "default": {
+    "time": 240,
+    "amount": 96,
+    "inputs": {
+     "energycells": 80,
+     "methane": 320
+    },
+    "workBonus": 0.46
+   }
+  }
+ },
+ "helium": {
+  "transport": "liquid",
+  "volume": 6,
+  "price": {
+   "min": 37,
+   "average": 44,
+   "max": 51
+  },
+  "recipes": {}
+ },
+ "hullparts": {
+  "transport": "container",
+  "volume": 12,
+  "price": {
+   "min": 146,
+   "average": 209,
+   "max": 272
+  },
+  "recipes": {
+   "default": {
+    "time": 900,
+    "amount": 294,
+    "inputs": {
+     "energycells": 80,
+     "graphene": 40,
+     "refinedmetals": 280
+    },
+    "workBonus": 0.37
+   },
+   "recycling": {
+    "time": 300,
+    "amount": 200,
+    "inputs": {
+     "energycells": 3500,
+     "scrapmetal": 75
+    },
+    "workBonus": 0.37
+   },
+   "teladi": {
+    "time": 900,
+    "amount": 294,
+    "inputs": {
+     "energycells": 80,
+     "graphene": 40,
+     "teladianium": 204
+    },
+    "workBonus": 0.37
+   }
+  }
+ },
+ "hydrogen": {
+  "transport": "liquid",
+  "volume": 6,
+  "price": {
+   "min": 49,
+   "average": 58,
+   "max": 67
+  },
+  "recipes": {}
+ },
+ "ice": {
+  "transport": "solid",
+  "volume": 8,
+  "price": {
+   "min": 26,
+   "average": 30,
+   "max": 35
+  },
+  "recipes": {}
+ },
+ "khaakalloy": {
+  "transport": "container",
+  "volume": 20,
+  "price": {
+   "min": 1260,
+   "average": 1400,
+   "max": 1540
+  },
+  "recipes": {
+   "recycling": {
+    "time": 300,
+    "amount": 100,
+    "inputs": {
+     "energycells": 6000,
+     "khaakscrapmetal": 300,
+     "nividium": 200
+    },
+    "workBonus": 0.37
+   }
+  }
+ },
+ "khaakscrapmetal": {
+  "transport": "solid",
+  "volume": 10,
+  "price": {
+   "min": 187,
+   "average": 220,
+   "max": 253
+  },
+  "recipes": {
+   "processing": {
+    "time": 60,
+    "amount": 1,
+    "inputs": {
+     "energycells": 10,
+     "rawkhaakscrap": 1
+    }
+   }
+  }
+ },
+ "majadust": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 94,
+   "average": 208,
+   "max": 323
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 64,
+    "inputs": {
+     "energycells": 40,
+     "majasnails": 120,
+     "spices": 60
+    },
+    "workBonus": 0.75
+   }
+  }
+ },
+ "majasnails": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 35,
+   "average": 58,
+   "max": 81
+  },
+  "recipes": {
+   "default": {
+    "time": 450,
+    "amount": 146,
+    "inputs": {
+     "energycells": 40,
+     "water": 100
+    },
+    "workBonus": 0.59
+   }
+  }
+ },
+ "meat": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 29,
+   "average": 48,
+   "max": 68
+  },
+  "recipes": {
+   "default": {
+    "time": 450,
+    "amount": 290,
+    "inputs": {
+     "energycells": 80,
+     "water": 100
+    },
+    "workBonus": 0.33
+   }
+  }
+ },
+ "medicalsupplies": {
+  "transport": "container",
+  "volume": 2,
+  "price": {
+   "min": 43,
+   "average": 66,
+   "max": 89
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 208,
+    "inputs": {
+     "energycells": 100,
+     "spices": 40,
+     "water": 60,
+     "wheat": 30
+    },
+    "workBonus": 0.28
+   },
+   "paranid": {
+    "time": 300,
+    "amount": 208,
+    "inputs": {
+     "energycells": 100,
+     "sojabeans": 10,
+     "spices": 40,
+     "water": 60
+    },
+    "workBonus": 0.28
+   },
+   "teladi": {
+    "time": 300,
+    "amount": 208,
+    "inputs": {
+     "energycells": 100,
+     "spices": 40,
+     "sunriseflowers": 12,
+     "water": 60
+    },
+    "workBonus": 0.28
+   }
+  }
+ },
+ "metallicmicrolattice": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 42,
+   "average": 50,
+   "max": 57
+  },
+  "recipes": {
+   "default": {
+    "time": 180,
+    "amount": 190,
+    "inputs": {
+     "energycells": 50,
+     "helium": 130,
+     "ore": 50
+    },
+    "workBonus": 0.2
+   }
+  }
+ },
+ "methane": {
+  "transport": "liquid",
+  "volume": 6,
+  "price": {
+   "min": 41,
+   "average": 48,
+   "max": 55
+  },
+  "recipes": {}
+ },
+ "microchips": {
+  "transport": "container",
+  "volume": 22,
+  "price": {
+   "min": 805,
+   "average": 948,
+   "max": 1090
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 72,
+    "inputs": {
+     "energycells": 50,
+     "siliconwafers": 200
+    },
+    "workBonus": 0.36
+   }
+  }
+ },
+ "missilecomponents": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 6,
+   "average": 9,
+   "max": 13
+  },
+  "recipes": {
+   "default": {
+    "time": 900,
+    "amount": 281,
+    "inputs": {
+     "advancedcomposites": 2,
+     "energycells": 20,
+     "hullparts": 2
+    },
+    "workBonus": 0.53
+   }
+  }
+ },
+ "nividium": {
+  "transport": "solid",
+  "volume": 10,
+  "price": {
+   "min": 434,
+   "average": 510,
+   "max": 587
+  },
+  "recipes": {}
+ },
+ "nostropoil": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 20,
+   "average": 34,
+   "max": 47
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 500,
+    "inputs": {
+     "energycells": 100,
+     "spices": 40,
+     "sunriseflowers": 40,
+     "water": 60
+    },
+    "workBonus": 0.2
+   }
+  }
+ },
+ "ore": {
+  "transport": "solid",
+  "volume": 10,
+  "price": {
+   "min": 43,
+   "average": 50,
+   "max": 58
+  },
+  "recipes": {}
+ },
+ "plankton": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 11,
+   "average": 18,
+   "max": 25
+  },
+  "recipes": {
+   "default": {
+    "time": 400,
+    "amount": 275,
+    "inputs": {
+     "energycells": 20,
+     "water": 50
+    },
+    "workBonus": 0.4
+   }
+  }
+ },
+ "plasmaconductors": {
+  "transport": "container",
+  "volume": 32,
+  "price": {
+   "min": 769,
+   "average": 1026,
+   "max": 1282
+  },
+  "recipes": {
+   "default": {
+    "time": 900,
+    "amount": 44,
+    "inputs": {
+     "energycells": 60,
+     "graphene": 96,
+     "superfluidcoolant": 140
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "proteinpaste": {
+  "transport": "container",
+  "volume": 4,
+  "price": {
+   "min": 57,
+   "average": 96,
+   "max": 134
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 219,
+    "inputs": {
+     "energycells": 80,
+     "ice": 80,
+     "methane": 200
+    },
+    "workBonus": 0.3
+   }
+  }
+ },
+ "quantumtubes": {
+  "transport": "container",
+  "volume": 22,
+  "price": {
+   "min": 225,
+   "average": 300,
+   "max": 375
+  },
+  "recipes": {
+   "default": {
+    "time": 720,
+    "amount": 94,
+    "inputs": {
+     "energycells": 40,
+     "graphene": 116,
+     "superfluidcoolant": 30
+    },
+    "workBonus": 0.53
+   }
+  }
+ },
+ "refinedmetals": {
+  "transport": "container",
+  "volume": 14,
+  "price": {
+   "min": 89,
+   "average": 148,
+   "max": 207
+  },
+  "recipes": {
+   "default": {
+    "time": 150,
+    "amount": 88,
+    "inputs": {
+     "energycells": 90,
+     "ore": 240
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "scanningarrays": {
+  "transport": "container",
+  "volume": 38,
+  "price": {
+   "min": 842,
+   "average": 1053,
+   "max": 1264
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 36,
+    "inputs": {
+     "energycells": 60,
+     "refinedmetals": 100,
+     "siliconwafers": 60
+    },
+    "workBonus": 0.38
+   },
+   "teladi": {
+    "time": 600,
+    "amount": 36,
+    "inputs": {
+     "energycells": 60,
+     "siliconwafers": 60,
+     "teladianium": 73
+    },
+    "workBonus": 0.38
+   }
+  }
+ },
+ "scrapmetal": {
+  "transport": "solid",
+  "volume": 10,
+  "price": {
+   "min": 318,
+   "average": 375,
+   "max": 431
+  },
+  "recipes": {
+   "processing": {
+    "time": 60,
+    "amount": 1,
+    "inputs": {
+     "energycells": 10,
+     "rawscrap": 1
+    }
+   }
+  }
+ },
+ "scruffinfruits": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 17,
+   "average": 28,
+   "max": 40
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 255,
+    "inputs": {
+     "energycells": 30,
+     "water": 80
+    },
+    "workBonus": 0.53
+   }
+  }
+ },
+ "shieldcomponents": {
+  "transport": "container",
+  "volume": 10,
+  "price": {
+   "min": 113,
+   "average": 188,
+   "max": 264
+  },
+  "recipes": {
+   "default": {
+    "time": 1200,
+    "amount": 193,
+    "inputs": {
+     "energycells": 70,
+     "plasmaconductors": 20,
+     "quantumtubes": 20
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "silicon": {
+  "transport": "solid",
+  "volume": 10,
+  "price": {
+   "min": 111,
+   "average": 130,
+   "max": 150
+  },
+  "recipes": {}
+ },
+ "siliconcarbide": {
+  "transport": "container",
+  "volume": 20,
+  "price": {
+   "min": 1202,
+   "average": 1414,
+   "max": 1627
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 48,
+    "inputs": {
+     "energycells": 200,
+     "metallicmicrolattice": 2,
+     "methane": 400,
+     "silicon": 300
+    },
+    "workBonus": 0.2
+   },
+   "recycling": {
+    "time": 300,
+    "amount": 60,
+    "inputs": {
+     "energycells": 4000,
+     "scrapmetal": 250
+    },
+    "workBonus": 0.2
+   }
+  }
+ },
+ "siliconwafers": {
+  "transport": "container",
+  "volume": 18,
+  "price": {
+   "min": 180,
+   "average": 299,
+   "max": 419
+  },
+  "recipes": {
+   "default": {
+    "time": 180,
+    "amount": 107,
+    "inputs": {
+     "energycells": 90,
+     "silicon": 240
+    },
+    "workBonus": 0.37
+   }
+  }
+ },
+ "smartchips": {
+  "transport": "container",
+  "volume": 2,
+  "price": {
+   "min": 46,
+   "average": 57,
+   "max": 69
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 143,
+    "inputs": {
+     "energycells": 50,
+     "siliconwafers": 20
+    },
+    "workBonus": 0.37
+   }
+  }
+ },
+ "sojabeans": {
+  "transport": "container",
+  "volume": 5,
+  "price": {
+   "min": 40,
+   "average": 67,
+   "max": 93
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 104,
+    "inputs": {
+     "energycells": 30,
+     "water": 80
+    },
+    "workBonus": 0.48
+   }
+  }
+ },
+ "sojahusk": {
+  "transport": "container",
+  "volume": 1,
+  "price": {
+   "min": 19,
+   "average": 32,
+   "max": 45
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 350,
+    "inputs": {
+     "energycells": 80,
+     "majasnails": 50,
+     "sojabeans": 40,
+     "spices": 20
+    },
+    "workBonus": 0.37
+   }
+  }
+ },
+ "spacefuel": {
+  "transport": "container",
+  "volume": 2,
+  "price": {
+   "min": 60,
+   "average": 133,
+   "max": 207
+  },
+  "recipes": {
+   "default": {
+    "time": 480,
+    "amount": 98,
+    "inputs": {
+     "energycells": 40,
+     "water": 100,
+     "wheat": 80
+    },
+    "workBonus": 0.69
+   }
+  }
+ },
+ "spaceweed": {
+  "transport": "container",
+  "volume": 3,
+  "price": {
+   "min": 75,
+   "average": 166,
+   "max": 257
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 183,
+    "inputs": {
+     "energycells": 140,
+     "spices": 40,
+     "swampplant": 120
+    },
+    "workBonus": 0.7
+   }
+  }
+ },
+ "spices": {
+  "transport": "container",
+  "volume": 3,
+  "price": {
+   "min": 12,
+   "average": 20,
+   "max": 28
+  },
+  "recipes": {
+   "default": {
+    "time": 600,
+    "amount": 500,
+    "inputs": {
+     "energycells": 40,
+     "water": 80
+    },
+    "workBonus": 0.4
+   }
+  }
+ },
+ "stimulants": {
+  "transport": "container",
+  "volume": 12,
+  "price": {
+   "min": 153,
+   "average": 340,
+   "max": 527
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 98,
+    "inputs": {
+     "energycells": 80,
+     "helium": 400,
+     "silicon": 20
+    },
+    "workBonus": 0.65
+   }
+  }
+ },
+ "sunriseflowers": {
+  "transport": "container",
+  "volume": 5,
+  "price": {
+   "min": 48,
+   "average": 80,
+   "max": 112
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 100,
+    "inputs": {
+     "energycells": 30,
+     "water": 80
+    },
+    "workBonus": 0.28
+   }
+  }
+ },
+ "superfluidcoolant": {
+  "transport": "container",
+  "volume": 16,
+  "price": {
+   "min": 90,
+   "average": 150,
+   "max": 211
+  },
+  "recipes": {
+   "default": {
+    "time": 240,
+    "amount": 95,
+    "inputs": {
+     "energycells": 60,
+     "helium": 320
+    },
+    "workBonus": 0.49
+   }
+  }
+ },
+ "swampplant": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 50,
+   "average": 84,
+   "max": 117
+  },
+  "recipes": {
+   "default": {
+    "time": 450,
+    "amount": 120,
+    "inputs": {
+     "energycells": 40,
+     "water": 100
+    },
+    "workBonus": 0.59
+   }
+  }
+ },
+ "teladianium": {
+  "transport": "container",
+  "volume": 16,
+  "price": {
+   "min": 121,
+   "average": 202,
+   "max": 283
+  },
+  "recipes": {
+   "default": {
+    "time": 120,
+    "amount": 70,
+    "inputs": {
+     "energycells": 45,
+     "ore": 280
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "terranmre": {
+  "transport": "container",
+  "volume": 2,
+  "price": {
+   "min": 32,
+   "average": 54,
+   "max": 75
+  },
+  "recipes": {
+   "default": {
+    "time": 240,
+    "amount": 175,
+    "inputs": {
+     "energycells": 60,
+     "proteinpaste": 60
+    },
+    "workBonus": 0.42
+   }
+  }
+ },
+ "turretcomponents": {
+  "transport": "container",
+  "volume": 20,
+  "price": {
+   "min": 164,
+   "average": 273,
+   "max": 383
+  },
+  "recipes": {
+   "default": {
+    "time": 1800,
+    "amount": 170,
+    "inputs": {
+     "energycells": 60,
+     "microchips": 20,
+     "quantumtubes": 20,
+     "scanningarrays": 10
+    },
+    "workBonus": 0.53
+   }
+  }
+ },
+ "water": {
+  "transport": "container",
+  "volume": 6,
+  "price": {
+   "min": 32,
+   "average": 53,
+   "max": 74
+  },
+  "recipes": {
+   "default": {
+    "time": 120,
+    "amount": 193,
+    "inputs": {
+     "energycells": 60,
+     "ice": 320
+    },
+    "workBonus": 0.43
+   }
+  }
+ },
+ "weaponcomponents": {
+  "transport": "container",
+  "volume": 20,
+  "price": {
+   "min": 171,
+   "average": 285,
+   "max": 399
+  },
+  "recipes": {
+   "default": {
+    "time": 1800,
+    "amount": 170,
+    "inputs": {
+     "energycells": 60,
+     "hullparts": 20,
+     "plasmaconductors": 30
+    },
+    "workBonus": 0.53
+   }
+  }
+ },
+ "wheat": {
+  "transport": "container",
+  "volume": 4,
+  "price": {
+   "min": 19,
+   "average": 31,
+   "max": 44
+  },
+  "recipes": {
+   "default": {
+    "time": 300,
+    "amount": 310,
+    "inputs": {
+     "energycells": 60,
+     "water": 80
+    },
+    "workBonus": 0.28
+   }
+  }
+ }
+}

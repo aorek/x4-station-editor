@@ -20,31 +20,32 @@ const EDGE_OPACITY = 0.22;
 
 function geometryFor(shape: ModuleShape): THREE.BufferGeometry {
   const [x, y, z] = shape.size;
+  const [cx, cy, cz] = shape.center ?? [0, 0, 0];
   switch (shape.kind) {
     case "cylinderY":
-      return new THREE.CylinderGeometry(x / 2, x / 2, y, 24);
+      return new THREE.CylinderGeometry(x / 2, x / 2, y, 24).translate(cx, cy, cz);
     case "cylinderZ":
-      return new THREE.CylinderGeometry(x / 2, x / 2, z, 16).rotateX(Math.PI / 2);
+      return new THREE.CylinderGeometry(x / 2, x / 2, z, 16).rotateX(Math.PI / 2).translate(cx, cy, cz);
     case "box":
-      return new THREE.BoxGeometry(x, y, z);
+      return new THREE.BoxGeometry(x, y, z).translate(cx, cy, cz);
   }
 }
 
 /**
- * Escena 3D de una estación.
+ * 3D scene of a station.
  *
- * X4 usa un sistema de mano izquierda y Three.js uno de mano derecha. En lugar
- * de convertir cada posición y rotación, todo cuelga de un grupo con escala
- * Z = -1: los datos del plano se usan tal cual y el espejo hace la conversión.
+ * X4 is left-handed and Three.js is right-handed. Instead of converting every
+ * position and rotation, everything hangs from a group with Z scale -1: plan
+ * data is used as-is and the mirror does the conversion.
  */
 export class StationViewer {
   readonly renderer: THREE.WebGLRenderer;
   readonly camera: THREE.PerspectiveCamera;
   readonly controls: OrbitControls;
 
-  /** Se llama al pasar el ratón por encima de un módulo (o al salir). */
+  /** Called when the pointer moves over a module (or leaves it). */
   onHover: (pick: ModulePick | null, x: number, y: number) => void = () => {};
-  /** Se llama al seleccionar un módulo con clic (o al deseleccionar). */
+  /** Called when a module is clicked (or deselected). */
   onSelect: (pick: ModulePick | null) => void = () => {};
 
   private readonly scene = new THREE.Scene();
@@ -129,7 +130,7 @@ export class StationViewer {
     this.fit();
   }
 
-  /** Encuadra la cámara para ver la estación entera. */
+  /** Frames the camera on the whole station. */
   fit(): void {
     const box = this.stationBox();
     if (box.isEmpty()) return;
@@ -142,7 +143,7 @@ export class StationViewer {
     this.controls.update();
   }
 
-  /** Tamaño de la estación en metros [x, y, z]. */
+  /** Station size in metres [x, y, z]. */
   size(): [number, number, number] {
     const s = this.stationBox().getSize(new THREE.Vector3());
     return [s.x, s.y, s.z];
@@ -153,6 +154,15 @@ export class StationViewer {
     this.restyle();
     if (this.selected && focus) this.controls.target.copy(this.selected.mesh.getWorldPosition(new THREE.Vector3()));
     this.onSelect(this.selected);
+  }
+
+  /** Currently selected module, or null. */
+  selection(): ModulePick | null {
+    return this.selected;
+  }
+
+  isCategoryVisible(category: CategoryId): boolean {
+    return !this.hidden.has(category);
   }
 
   setCategoryVisible(category: CategoryId, visible: boolean): void {
@@ -175,7 +185,7 @@ export class StationViewer {
     this.renderer.domElement.remove();
   }
 
-  // ---------- internos ----------
+  // ---------- internals ----------
 
   private clear(): void {
     for (const r of this.records) {
@@ -211,7 +221,7 @@ export class StationViewer {
     return box;
   }
 
-  /** Línea entre el centro de cada módulo y el de su predecesor. */
+  /** Line from each module origin to its predecessor's. */
   private createLinks(plan: ConstructionPlan) {
     const points: THREE.Vector3[] = [];
     for (const entry of plan.entries) {
@@ -313,7 +323,7 @@ export class StationViewer {
     canvas.addEventListener("pointerup", (event) => {
       const start = this.pointerDown;
       this.pointerDown = null;
-      // Un arrastre para girar la cámara no cuenta como clic.
+      // A drag to orbit the camera does not count as a click.
       if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 4) return;
       this.select(this.pick(event).record?.entry.index ?? null);
     });
