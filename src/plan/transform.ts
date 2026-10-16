@@ -5,12 +5,12 @@ export type QuatTuple = [x: number, y: number, z: number, w: number];
 const DEG = Math.PI / 180;
 
 /**
- * Convierte `<rotation yaw pitch roll>` (grados) a cuaternión.
+ * Converts `<rotation yaw pitch roll>` (degrees) to a quaternion.
  *
- * Convención asumida: yaw gira sobre Y, pitch sobre X y roll sobre Z, aplicados
- * en orden Y → X → Z (equivale a `THREE.Euler(pitch, yaw, roll, "YXZ")`).
- * Los planos de prueba solo usan yaw y roll de ±90/180°, así que el orden aún
- * no está verificado con rotaciones combinadas arbitrarias.
+ * Yaw turns about Y, pitch about X and roll about Z, applied in Y → X → Z
+ * order (same as `THREE.Euler(pitch, yaw, roll, "YXZ")`). Checked against the
+ * connection snaps of the sample plan, which only uses yaw and roll of
+ * ±90/180°; not yet verified with pitch or arbitrary angles.
  */
 export function eulerDegToQuaternion(yaw: number, pitch: number, roll: number): QuatTuple {
   const x = pitch * DEG;
@@ -27,7 +27,7 @@ export function eulerDegToQuaternion(yaw: number, pitch: number, roll: number): 
   ];
 }
 
-/** Rotación de una entrada como cuaternión normalizado, en coordenadas de X4. */
+/** Rotation of an entry as a normalized quaternion, in X4 coordinates. */
 export function entryQuaternion(entry: PlanEntry): QuatTuple {
   if (entry.quaternion) {
     const { x, y, z, w } = entry.quaternion;

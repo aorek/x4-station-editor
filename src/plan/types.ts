@@ -1,18 +1,18 @@
-/** Vector en el sistema de coordenadas de X4 (mano izquierda, Y hacia arriba, metros). */
+/** Vector in X4 coordinates (left-handed, Y up, metres). */
 export interface Vec3 {
   x: number;
   y: number;
   z: number;
 }
 
-/** Rotación en grados tal como aparece en `<rotation yaw pitch roll>`. */
+/** Rotation in degrees, as in `<rotation yaw pitch roll>`. */
 export interface EulerDeg {
   yaw: number;
   pitch: number;
   roll: number;
 }
 
-/** Rotación tal como aparece en `<quaternion qx qy qz qw>`. */
+/** Rotation as in `<quaternion qx qy qz qw>`. */
 export interface Quat {
   x: number;
   y: number;
@@ -21,19 +21,19 @@ export interface Quat {
 }
 
 export interface Predecessor {
-  /** Índice de la entrada a la que se engancha este módulo. */
+  /** Index of the entry this module attaches to. */
   index: string;
-  /** Punto de anclaje del módulo predecesor (p. ej. `connectionsnap003`). */
+  /** Connection snap on the predecessor module (e.g. `connectionsnap003`). */
   connection: string | null;
 }
 
 export interface PlanEntry {
   index: string;
   macro: string;
-  /** Punto de anclaje propio con el que se une al predecesor. */
+  /** Own connection snap used to attach to the predecessor. */
   connection: string | null;
   predecessor: Predecessor | null;
-  /** Posición absoluta respecto al origen del plano. */
+  /** Absolute position relative to the plan origin. */
   position: Vec3;
   rotation: EulerDeg | null;
   quaternion: Quat | null;

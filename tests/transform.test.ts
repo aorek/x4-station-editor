@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { entryQuaternion, eulerDegToQuaternion, type QuatTuple } from "../src/plan/transform";
 import type { PlanEntry } from "../src/plan/types";
 
-/** Gira un vector con un cuaternión (q · v · q⁻¹). */
+/** Rotates a vector by a quaternion (q · v · q⁻¹). */
 function rotate([qx, qy, qz, qw]: QuatTuple, [x, y, z]: [number, number, number]): [number, number, number] {
   const ix = qw * x + qy * z - qz * y;
   const iy = qw * y + qz * x - qx * z;
@@ -30,31 +30,31 @@ const baseEntry: PlanEntry = {
 };
 
 describe("eulerDegToQuaternion", () => {
-  it("sin rotación da la identidad", () => {
+  it("no rotation gives the identity", () => {
     expect(eulerDegToQuaternion(0, 0, 0)).toEqual([0, 0, 0, 1]);
   });
 
-  it("yaw gira alrededor de Y", () => {
-    // Un conector recto con yaw -90 pasa de estar a lo largo de Z a estar a lo largo de X.
+  it("yaw turns about Y", () => {
+    // A straight connector with yaw -90 goes from lying along Z to lying along X.
     expectVec(rotate(eulerDegToQuaternion(-90, 0, 0), [0, 0, 1]), [-1, 0, 0]);
     expectVec(rotate(eulerDegToQuaternion(-90, 0, 0), [0, 1, 0]), [0, 1, 0]);
   });
 
-  it("pitch gira alrededor de X y roll alrededor de Z", () => {
+  it("pitch turns about X and roll about Z", () => {
     expectVec(rotate(eulerDegToQuaternion(0, 90, 0), [1, 0, 0]), [1, 0, 0]);
     expectVec(rotate(eulerDegToQuaternion(0, 0, 90), [0, 0, 1]), [0, 0, 1]);
   });
 });
 
 describe("entryQuaternion", () => {
-  it("usa el cuaternión del plano normalizado", () => {
+  it("uses the plan quaternion, normalized", () => {
     const q = entryQuaternion({ ...baseEntry, quaternion: { x: -0.707107, y: 0, z: 0, w: 0.707107 } });
     expect(Math.hypot(...q)).toBeCloseTo(1, 10);
-    // El almacén S de ejemplo pasa de estar a lo largo de Z a estar en vertical.
+    // The sample S storage goes from lying along Z to standing upright.
     expectVec(rotate(q, [0, 0, 1]), [0, 1, 0]);
   });
 
-  it("sin rotación devuelve la identidad", () => {
+  it("returns the identity without rotation", () => {
     expect(entryQuaternion(baseEntry)).toEqual([0, 0, 0, 1]);
   });
 });

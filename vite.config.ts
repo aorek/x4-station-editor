@@ -2,7 +2,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  // Rutas relativas para poder publicar el build en cualquier subcarpeta (p. ej. GitHub Pages).
+  // Relative paths so the build can be served from any subfolder (e.g. GitHub Pages).
   base: "./",
   test: {
     environment: "jsdom",
