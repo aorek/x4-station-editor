@@ -26,8 +26,8 @@ function renderSummary(plan: ConstructionPlan) {
     plan,
     summarizePlan(plan),
     viewer.size(),
-    (category) => viewer.isCategoryVisible(category),
-    (category, visible) => viewer.setCategoryVisible(category, visible),
+    (macro) => viewer.isMacroVisible(macro),
+    (macros, visible) => viewer.setMacrosVisible(macros, visible),
   );
 }
 

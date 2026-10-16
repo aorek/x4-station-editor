@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { CATEGORIES, describeModule, type CategoryId, type ModuleInfo, type ModuleShape } from "../catalog/modules";
+import { CATEGORIES, describeModule, type ModuleInfo, type ModuleShape } from "../catalog/modules";
 import { entryQuaternion } from "../plan/transform";
 import type { ConstructionPlan, PlanEntry } from "../plan/types";
 
@@ -55,7 +55,8 @@ export class StationViewer {
   private byIndex = new Map<string, ModuleRecord>();
   private links: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> | null = null;
   private grid: THREE.GridHelper | null = null;
-  private hidden = new Set<CategoryId>();
+  /** Macros drawn faded and ignored by picking. */
+  private hidden = new Set<string>();
   private hovered: ModuleRecord | null = null;
   private selected: ModuleRecord | null = null;
   private linksVisible = true;
@@ -161,13 +162,15 @@ export class StationViewer {
     return this.selected;
   }
 
-  isCategoryVisible(category: CategoryId): boolean {
-    return !this.hidden.has(category);
+  isMacroVisible(macro: string): boolean {
+    return !this.hidden.has(macro);
   }
 
-  setCategoryVisible(category: CategoryId, visible: boolean): void {
-    if (visible) this.hidden.delete(category);
-    else this.hidden.add(category);
+  setMacrosVisible(macros: string[], visible: boolean): void {
+    for (const macro of macros) {
+      if (visible) this.hidden.delete(macro);
+      else this.hidden.add(macro);
+    }
     this.restyle();
   }
 
@@ -266,7 +269,7 @@ export class StationViewer {
 
   private restyle(): void {
     for (const r of this.records) {
-      const dimmed = this.hidden.has(r.info.category);
+      const dimmed = this.hidden.has(r.entry.macro);
       const m = r.mesh.material;
       m.opacity = dimmed ? 0.08 : 1;
       m.depthWrite = !dimmed;
@@ -291,7 +294,7 @@ export class StationViewer {
     const y = event.clientY - rect.top;
     const ndc = new THREE.Vector2((x / rect.width) * 2 - 1, -(y / rect.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
-    const candidates = this.records.filter((r) => !this.hidden.has(r.info.category));
+    const candidates = this.records.filter((r) => !this.hidden.has(r.entry.macro));
     const hit = this.raycaster.intersectObjects(candidates.map((r) => r.mesh), false)[0];
     const record = hit ? (candidates.find((r) => r.mesh === hit.object) ?? null) : null;
     return { record, x, y };

@@ -11,6 +11,7 @@ export const es: Messages = {
     statProduction: "producción",
     statSize: "tamaño (km)",
     moduleTypes: "Tipos de módulo",
+    showModules: "Mostrar módulos de {category}",
     production: "Producción",
     selectedModule: "Módulo seleccionado",
     openXml: "Abrir XML…",

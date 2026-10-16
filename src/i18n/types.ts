@@ -17,6 +17,7 @@ export interface Messages {
     statProduction: string;
     statSize: string;
     moduleTypes: string;
+    showModules: string;
     production: string;
     selectedModule: string;
     openXml: string;

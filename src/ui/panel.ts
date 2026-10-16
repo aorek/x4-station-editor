@@ -1,4 +1,4 @@
-import { CATEGORIES, CATEGORY_ORDER, type CategoryId, type ModuleStats } from "../catalog/modules";
+import { CATEGORIES, CATEGORY_ORDER, describeModule, type CategoryId, type ModuleStats } from "../catalog/modules";
 import { productionRate } from "../catalog/wares";
 import { FLAGS } from "../i18n/flags";
 import {
@@ -87,6 +87,19 @@ function statRows(stats: ModuleStats, row: Row): HTMLElement[] {
   return rows;
 }
 
+/** Show/hide button of the legend: colour chip, label and module count. */
+function legendToggle(color: string, label: string, count: number): HTMLButtonElement {
+  const chip = el("span", { className: "chip" });
+  chip.style.backgroundColor = color;
+  return el(
+    "button",
+    { type: "button", className: "legend-toggle" },
+    chip,
+    el("span", {}, label),
+    el("span", { className: "count" }, String(count)),
+  );
+}
+
 export const panel = {
   planName: byId<HTMLHeadingElement>("plan-name"),
   planSelect: byId<HTMLSelectElement>("plan-select"),
@@ -100,6 +113,8 @@ export const panel = {
   tip: byId<HTMLDivElement>("tip"),
   localeSelect: byId<HTMLDivElement>("lang-select"),
   lastError: null as unknown,
+  /** Categories whose module list is unfolded; kept across plans and language changes. */
+  expanded: new Set<CategoryId>(),
 
   renderPlanList(plans: ConstructionPlan[], selected = 0): void {
     this.planSelect.replaceChildren(
@@ -128,34 +143,65 @@ export const panel = {
     plan: ConstructionPlan,
     summary: PlanSummary,
     sizeMeters: [number, number, number],
-    isCategoryVisible: (category: CategoryId) => boolean,
-    onToggleCategory: (category: CategoryId, visible: boolean) => void,
+    isMacroVisible: (macro: string) => boolean,
+    onToggleMacros: (macros: string[], visible: boolean) => void,
   ): void {
     this.planName.textContent = plan.name || t("untitledPlan");
     byId("stat-modules").textContent = String(summary.moduleCount);
     byId("stat-production").textContent = String(summary.byCategory.production ?? 0);
     byId("stat-size").textContent = sizeMeters.map((m) => (m / 1000).toFixed(1)).join("×");
 
+    // Every toggle re-reads visibility after a click, so a category and its modules stay in sync.
+    const syncs: Array<() => void> = [];
+    const sync = () => syncs.forEach((update) => update());
+
     this.legend.replaceChildren(
-      ...CATEGORY_ORDER.filter((id) => summary.byCategory[id]).map((id) => {
-        const category = CATEGORIES[id];
-        const button = el(
-          "button",
-          { type: "button" },
-          el("span", { className: "chip" }),
-          el("span", {}, categoryLabel(id)),
-          el("span", { className: "count" }, String(summary.byCategory[id])),
+      ...CATEGORY_ORDER.filter((id) => summary.macrosByCategory[id]).map((id) => {
+        const color = hex(CATEGORIES[id].color);
+        const macros = summary.macrosByCategory[id]!;
+        const all = macros.map((m) => m.macro);
+
+        const sub = el(
+          "ul",
+          { className: "legend-sub", id: `legend-${id}`, hidden: !this.expanded.has(id) },
+          ...macros.map(({ macro, count }) => {
+            const button = legendToggle(color, moduleName(describeModule(macro)), count);
+            syncs.push(() => button.setAttribute("aria-pressed", String(isMacroVisible(macro))));
+            button.addEventListener("click", () => {
+              onToggleMacros([macro], !isMacroVisible(macro));
+              sync();
+            });
+            return el("li", {}, button);
+          }),
         );
-        (button.firstChild as HTMLElement).style.background = hex(category.color);
-        button.setAttribute("aria-pressed", String(isCategoryVisible(id)));
-        button.addEventListener("click", () => {
-          const visible = button.getAttribute("aria-pressed") !== "true";
-          button.setAttribute("aria-pressed", String(visible));
-          onToggleCategory(id, visible);
+
+        const label = categoryLabel(id);
+        const toggle = legendToggle(color, label, summary.byCategory[id] ?? 0);
+        syncs.push(() => {
+          const shown = all.filter(isMacroVisible).length;
+          toggle.setAttribute("aria-pressed", shown === all.length ? "true" : shown === 0 ? "false" : "mixed");
         });
-        return el("li", {}, button);
+        // All shown → hide them all; otherwise show them all.
+        toggle.addEventListener("click", () => {
+          onToggleMacros(all, !all.every(isMacroVisible));
+          sync();
+        });
+
+        const expander = el("button", { type: "button", className: "expander" });
+        expander.setAttribute("aria-expanded", String(!sub.hidden));
+        expander.setAttribute("aria-controls", sub.id);
+        expander.setAttribute("aria-label", t("showModules", { category: label }));
+        expander.addEventListener("click", () => {
+          sub.hidden = !sub.hidden;
+          if (sub.hidden) this.expanded.delete(id);
+          else this.expanded.add(id);
+          expander.setAttribute("aria-expanded", String(!sub.hidden));
+        });
+
+        return el("li", {}, el("div", { className: "legend-row" }, expander, toggle), sub);
       }),
     );
+    sync();
 
     this.productionSection.hidden = summary.production.length === 0;
     this.productionList.replaceChildren(

@@ -83,6 +83,17 @@ describe("summarizePlan", () => {
     });
   });
 
+  it("counts modules per macro within each category, most first", () => {
+    expect(summary.macrosByCategory.habitat).toEqual([
+      { macro: "hab_arg_s_01_macro", count: 2 },
+      { macro: "hab_arg_m_01_macro", count: 1 },
+    ]);
+    const total = (counts: Array<{ count: number }> = []) => counts.reduce((sum, c) => sum + c.count, 0);
+    for (const [category, count] of Object.entries(summary.byCategory)) {
+      expect(total(summary.macrosByCategory[category as keyof typeof summary.byCategory])).toBe(count);
+    }
+  });
+
   it("groups production by ware id with hourly output", () => {
     // 10 modules × 175 cells every 60 s; +43 % at full workforce.
     expect(summary.production).toEqual([

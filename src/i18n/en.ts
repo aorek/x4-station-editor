@@ -11,6 +11,7 @@ export const en: Messages = {
     statProduction: "production",
     statSize: "size (km)",
     moduleTypes: "Module types",
+    showModules: "Show {category} modules",
     production: "Production",
     selectedModule: "Selected module",
     openXml: "Open XML…",

@@ -12,9 +12,16 @@ export interface WareProduction {
   perHourWithWorkforce: number | null;
 }
 
+export interface MacroCount {
+  macro: string;
+  count: number;
+}
+
 export interface PlanSummary {
   moduleCount: number;
   byCategory: Partial<Record<CategoryId, number>>;
+  /** Module count per macro within each category, most modules first. */
+  macrosByCategory: Partial<Record<CategoryId, MacroCount[]>>;
   /** Production per ware id, most modules first. */
   production: WareProduction[];
   /** Workers the habitats house and workers the production modules need. */
@@ -25,12 +32,16 @@ export interface PlanSummary {
 
 export function summarizePlan(plan: ConstructionPlan): PlanSummary {
   const byCategory: Partial<Record<CategoryId, number>> = {};
+  const macros = new Map<string, { category: CategoryId; count: number }>();
   const production = new Map<string, WareProduction>();
   const workforce = { capacity: 0, needed: 0 };
 
   for (const entry of plan.entries) {
     const info = describeModule(entry.macro);
     byCategory[info.category] = (byCategory[info.category] ?? 0) + 1;
+    const macro = macros.get(entry.macro) ?? { category: info.category, count: 0 };
+    macro.count += 1;
+    macros.set(entry.macro, macro);
     workforce.capacity += info.stats.workforce?.capacity ?? 0;
     workforce.needed += info.stats.workforceNeeded ?? 0;
 
@@ -47,11 +58,16 @@ export function summarizePlan(plan: ConstructionPlan): PlanSummary {
     }
   }
 
+  const macrosByCategory: Partial<Record<CategoryId, MacroCount[]>> = {};
+  for (const [macro, { category, count }] of macros) (macrosByCategory[category] ??= []).push({ macro, count });
+  for (const list of Object.values(macrosByCategory)) list.sort((a, b) => b.count - a.count);
+
   const unlinked = plan.entries.slice(1).filter((e) => !e.predecessor).map((e) => e.index);
 
   return {
     moduleCount: plan.entries.length,
     byCategory,
+    macrosByCategory,
     production: [...production.values()].sort((a, b) => b.count - a.count),
     workforce,
     unlinked,
