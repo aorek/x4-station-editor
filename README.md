@@ -1,76 +1,111 @@
-# Visor de planos de X4
+# X4 Plan Viewer
 
-Aplicación web para ver en 3D los planos de construcción de estaciones de **X4: Foundations**.
+A web app for viewing **X4: Foundations** station construction plans in 3D.
 
-Carga un plano exportado o el `constructionplans.xml` completo y muestra la estación con cada módulo como una forma aproximada, coloreada por tipo. Puedes girar la cámara, inspeccionar cada módulo (macro, posición, rotación, a qué está unido) y ver un resumen de lo que produce la estación.
+Load an exported plan or the full `constructionplans.xml`. The app shows the station with each module drawn as its bounding box, coloured by type. You can orbit the camera and inspect each module: its game name, race, hull, workforce, storage, production per hour, docks, turrets and shields, plus its position, rotation, dimensions and what it is attached to. A summary lists what the station produces per hour and whether its habitats house enough workers.
 
-## Requisitos
+The interface is available in English and Spanish. It follows the browser language, and a selector in the side panel overrides it.
 
-- Node.js 20 o superior
+## Requirements
 
-## Puesta en marcha
+- Node.js 20 or later
+- pnpm
+
+## Getting started
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Abre la URL que muestra Vite (normalmente http://localhost:5173). Arranca con el plano de ejemplo `ARG EnCells 2C`; usa **Abrir XML…** o arrastra un archivo al visor para cargar otro.
+Open the URL Vite prints (usually http://localhost:5173). The app starts with the sample plan `ARG EnCells 2C`. Use **Open XML…** or drop a file onto the viewer to load another.
 
-Tus planos están en:
+Your plans are stored in:
 
 ```
-Documents\Egosoft\X4\<tu id>\constructionplans.xml
+Documents\Egosoft\X4\<your id>\constructionplans.xml
 ```
 
 ## Scripts
 
-| Comando | Qué hace |
+| Command | What it does |
 | --- | --- |
-| `pnpm dev` | Servidor de desarrollo con recarga en caliente |
-| `pnpm build` | Comprueba tipos y genera la versión de producción en `dist/` |
-| `pnpm preview` | Sirve `dist/` para probar el build |
-| `pnpm typecheck` | Solo comprobación de tipos |
-| `pnpm test` | Tests del parser y de las rotaciones |
+| `pnpm dev` | Development server with hot reload |
+| `pnpm build` | Type-checks and builds the production bundle into `dist/` |
+| `pnpm preview` | Serves `dist/` to try the build |
+| `pnpm typecheck` | Type-checking only |
+| `pnpm test` | Tests for the parser, rotations, connection snaps and translations |
+| `pnpm extract-game-data "<X4 folder>"` | Regenerates module, ware and text data from the installed game |
 
-## Estructura
+## Game data
+
+`scripts/extract-game-data.mjs` reads the install's `.cat/.dat` catalogs directly (base game and DLCs), so the X Catalog Tool is not needed:
+
+```bash
+pnpm extract-game-data "/path/to/X4 Foundations"
+```
+
+It writes three files. Do not edit them by hand; re-run the script when a game update or DLC changes them.
+
+| File | Contents |
+| --- | --- |
+| `src/catalog/modules.generated.json` | Every station module: class, race, hull, workforce housed or needed, storage, produced wares and recipe, external docking bays, turret and shield mounts, bounding box of the main part (`part_main`) and connection snaps (`connectionsnapXXX`, with position and quaternion) |
+| `src/catalog/wares.generated.json` | Every economy ware: transport type, volume, prices and recipes (cycle time, output, inputs, workforce bonus) |
+| `src/i18n/texts.generated.json` | Ware, module and race names in English and Spanish, from the game's `t/0001-lNNN.xml` |
+
+Production per hour is `amount × 3600 / time` per module, and the workforce bonus multiplies it by `1 + workBonus` at full workforce.
+
+Macros missing from the data, for example from mods, are drawn with an estimated shape, get a name built from their macro and show no stats.
+
+## Translations
+
+Interface texts live in one dictionary per language in `src/i18n/` (`en.ts`, `es.ts`). Both must match the shape declared in `src/i18n/types.ts`, and a test checks that every language has the same keys. Ware, module and race names come from the game instead (`texts.generated.json`).
+
+To add a language, create its dictionary, register it in `DICTIONARIES` in `src/i18n/index.ts`, add its X4 language id to `LANGUAGES` in the extraction script and re-run it.
+
+## Project layout
 
 ```
 src/
-  plan/          Lectura del XML y matemáticas de rotación (sin dependencias de Three.js)
-    types.ts       Tipos del plano
+  plan/          XML parsing and rotation maths (no Three.js dependency)
+    types.ts       Plan types
     parse.ts       XML → ConstructionPlan[]
-    transform.ts   yaw/pitch/roll y cuaterniones → cuaternión
-    summary.ts     Recuento de módulos y producción
+    transform.ts   yaw/pitch/roll and quaternions → quaternion
+    summary.ts     Module and production counts
   catalog/
-    modules.ts     Categoría, nombre y forma aproximada de cada macro
+    modules.ts     Category, kind, shape, snaps and stats for each macro
+    wares.ts       Recipes and production per hour
+    *.generated.json  Data extracted from the game (do not edit by hand)
+  i18n/          Dictionaries per language, game names and translation helpers
   viewer/
-    StationViewer.ts  Escena Three.js: módulos, conexiones, cámara y selección
+    StationViewer.ts  Three.js scene: modules, links, camera and selection
   ui/
-    panel.ts       Panel lateral
-  samples/         Planos de ejemplo
-tests/             Tests con Vitest
+    panel.ts       Side panel
+  samples/       Sample plans
+scripts/
+  extract-game-data.mjs  Extracts module, ware and text data from the game
+tests/           Vitest tests
 ```
 
-## Cómo se interpreta un plano
+## How a plan is read
 
-- Cada `<entry>` es un módulo. `macro` dice qué módulo es.
-- `<offset><position>` es la posición **absoluta** respecto al origen del plano, en metros. No hace falta recorrer el árbol de conexiones para colocar los módulos.
-- La rotación viene como `<rotation yaw pitch roll>` en grados o como `<quaternion qx qy qz qw>`. Los atributos ausentes valen 0 (salvo `qw`, que vale 1).
-- `<predecessor>` indica a qué módulo está enganchado y por qué punto de anclaje (`connectionsnapXXX`). Hoy solo se usa para dibujar las líneas de conexión.
-- X4 usa un sistema de coordenadas de mano izquierda. El visor cuelga toda la estación de un grupo con escala Z = -1, así que los datos se usan sin convertir.
+- Each `<entry>` is a module, and `macro` says which one.
+- `<offset><position>` is the **absolute** position relative to the plan origin, in metres. There is no need to walk the connection tree to place modules.
+- Rotation is given either as `<rotation yaw pitch roll>` in degrees or as `<quaternion qx qy qz qw>`. Missing attributes are 0, except `qw`, which is 1.
+- `<predecessor>` says which module this one attaches to and through which snap (`connectionsnapXXX`). For now it is only used to draw the link lines.
+- X4 uses left-handed coordinates. The viewer hangs the whole station from a group with Z scale -1, so the data is used without conversion.
 
-## Limitaciones conocidas
+## Known limitations
 
-- **Los tamaños de los módulos son estimaciones** deducidas de las distancias entre módulos conectados en planos reales (`src/catalog/modules.ts`). Módulos de otras razas o tamaños pueden verse con proporciones incorrectas.
-- El orden de aplicación de yaw/pitch/roll está deducido, no verificado con rotaciones combinadas arbitrarias.
+- Each module is drawn as its bounding box, so L- and T-shaped modules (piers, some storage) look like solid blocks.
+- The yaw/pitch/roll order (Y → X → Z) is checked against the snaps of the sample plan, which only uses yaw and roll of ±90/180°. It has not been verified with pitch or arbitrary angles.
 
-## Siguientes pasos
+## Next steps
 
-1. **Datos reales del juego.** Extraer con la X Catalog Tool de Egosoft los archivos de macros y componentes de los módulos de estación y generar un JSON con dimensiones y puntos de anclaje reales, que sustituya a las estimaciones.
-2. **Producción y consumo** por hora a partir de las recetas del juego.
-3. **Modelos 3D reales**, cargados desde la instalación del usuario (no se pueden redistribuir).
+1. **Production chains**: what a station needs from outside and what it has left over, from the recipes already extracted.
+2. **Workforce bonus per station**: today the panel shows output without workforce and at full workforce, not the actual mix.
+3. **Real 3D models**, loaded from the user's own install (they cannot be redistributed).
 
-## Aviso
+## Disclaimer
 
-X4: Foundations es una marca de Egosoft GmbH. Este proyecto no está afiliado a Egosoft y no incluye recursos del juego.
+X4: Foundations is a trademark of Egosoft GmbH. This project is not affiliated with Egosoft. It ships no models, textures or sounds. From the game files it only extracts numbers (dimensions, snaps, stats, recipes) and the names of wares, modules and races.
