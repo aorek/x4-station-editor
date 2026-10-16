@@ -45,6 +45,16 @@ export interface Messages {
     emptyDetail: string;
     focusModule: string;
     deleteModule: string;
+    /** Deletes a module and everything attached to it; `{count}` modules in all. */
+    deleteSequence: string;
+    deleteSequenceTitle: string;
+    /** `{name}` and `{index}` of the module, `{count}` modules attached to it. */
+    deleteSequenceMessage: string;
+    /** Same with a single module attached. */
+    deleteSequenceMessageOne: string;
+    /** `{count}` modules in all. */
+    deleteSequenceConfirm: string;
+    cancel: string;
     index: string;
     position: string;
     rotation: string;

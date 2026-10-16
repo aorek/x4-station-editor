@@ -40,6 +40,14 @@ export const en: Messages = {
     emptyDetail: "Click a module in the viewer.",
     focusModule: "Center view on module",
     deleteModule: "Delete module",
+    deleteSequence: "Delete sequence ({count} modules)",
+    deleteSequenceTitle: "Delete sequence?",
+    deleteSequenceMessage:
+      "{name} (#{index}) and the {count} modules attached to it, shown in red, will be deleted. This cannot be undone.",
+    deleteSequenceMessageOne:
+      "{name} (#{index}) and the module attached to it, shown in red, will be deleted. This cannot be undone.",
+    deleteSequenceConfirm: "Delete {count} modules",
+    cancel: "Cancel",
     index: "Index",
     position: "Position",
     rotation: "Rotation",

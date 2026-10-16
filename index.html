@@ -80,6 +80,16 @@
         <button class="btn primary export-save" type="button" data-i18n="saveXml"></button>
       </footer>
     </dialog>
+    <dialog class="confirm" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <form method="dialog">
+        <h2 class="confirm-title" id="confirm-title"></h2>
+        <p class="confirm-message" id="confirm-message"></p>
+        <footer>
+          <button class="btn" value="cancel"></button>
+          <button class="btn danger" value="confirm"></button>
+        </footer>
+      </form>
+    </dialog>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

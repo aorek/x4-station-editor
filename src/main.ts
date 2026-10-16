@@ -1,10 +1,11 @@
 import "./style.css";
 import sampleXml from "./samples/ARG_EnCells_2C.xml?raw";
 import { applyStaticTexts, moduleName, onLocaleChange, setLocale, t } from "./i18n";
-import { removeEntry } from "./plan/edit";
+import { removeEntries, sequenceOf } from "./plan/edit";
 import { parseConstructionPlans } from "./plan/parse";
 import { summarizePlan } from "./plan/summary";
 import type { ConstructionPlan } from "./plan/types";
+import { ConfirmDialog } from "./ui/confirmDialog";
 import { ContextMenu } from "./ui/contextMenu";
 import { ExportDialog } from "./ui/exportDialog";
 import { panel } from "./ui/panel";
@@ -15,6 +16,7 @@ panel.renderLocaleSelect(setLocale);
 
 const viewer = new StationViewer(document.getElementById("canvas-host")!);
 const menu = new ContextMenu(document.getElementById("context-menu")!);
+const confirmDialog = new ConfirmDialog(document.getElementById("confirm-dialog") as HTMLDialogElement);
 const exportDialog = new ExportDialog(document.getElementById("export-dialog") as HTMLDialogElement);
 let plans: ConstructionPlan[] = [];
 let current: ConstructionPlan | null = null;
@@ -28,6 +30,9 @@ viewer.onHover = (pick, x, y) => {
 };
 viewer.onSelect = (pick) => panel.renderDetail(pick, current, goTo);
 viewer.onContextMenu = ({ entry, info }, x, y) => {
+  if (!current) return;
+  // A module with followers can only go together with everything hanging from it.
+  const sequence = sequenceOf(current, entry.index);
   panel.showTip(null, 0, 0);
   menu.show(
     moduleName(info),
@@ -35,11 +40,14 @@ viewer.onContextMenu = ({ entry, info }, x, y) => {
     [
       { label: t("focusModule"), onSelect: () => goTo(entry.index) },
       {
-        label: t("deleteModule"),
+        label: sequence.length > 1 ? t("deleteSequence", { count: sequence.length }) : t("deleteModule"),
         danger: true,
         // An empty plan has nothing to show; keep at least one module.
-        disabled: (current?.entries.length ?? 0) < 2,
-        onSelect: () => deleteModule(entry.index),
+        disabled: sequence.length >= current.entries.length,
+        onSelect: () => {
+          if (sequence.length > 1) void confirmSequenceDeletion(sequence, moduleName(info), entry.index);
+          else deleteModules(sequence);
+        },
       },
     ],
     x,
@@ -65,10 +73,27 @@ function showPlan(plan: ConstructionPlan) {
   panel.renderDetail(null, plan, goTo);
 }
 
-/** Removes a module from the current plan, keeping the camera and hidden modules. */
-function deleteModule(index: string) {
+/** Asks before deleting a module with everything attached to it, showing in red what would go. */
+async function confirmSequenceDeletion(sequence: string[], name: string, index: string) {
+  viewer.setMarked(sequence);
+  const confirmed = await confirmDialog.ask({
+    title: t("deleteSequenceTitle"),
+    message: t(sequence.length === 2 ? "deleteSequenceMessageOne" : "deleteSequenceMessage", {
+      name,
+      index,
+      count: sequence.length - 1,
+    }),
+    confirmLabel: t("deleteSequenceConfirm", { count: sequence.length }),
+    cancelLabel: t("cancel"),
+  });
+  viewer.setMarked([]);
+  if (confirmed) deleteModules(sequence);
+}
+
+/** Removes modules from the current plan, keeping the camera and hidden modules. */
+function deleteModules(indices: string[]) {
   if (!current) return;
-  const plan = removeEntry(current, index);
+  const plan = removeEntries(current, indices);
   plans[plans.indexOf(current)] = plan;
   current = plan;
   viewer.load(plan, { keepView: true });

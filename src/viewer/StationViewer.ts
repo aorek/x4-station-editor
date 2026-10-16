@@ -17,6 +17,7 @@ interface ModuleRecord extends ModulePick {
 const BACKGROUND = 0x0b1119;
 const LINK_COLOR = 0xf0a64b;
 const EDGE_OPACITY = 0.22;
+const MARK_COLOR = 0xff3b2f;
 
 function geometryFor(shape: ModuleShape): THREE.BufferGeometry {
   const [x, y, z] = shape.size;
@@ -61,6 +62,8 @@ export class StationViewer {
   private hidden = new Set<string>();
   private hovered: ModuleRecord | null = null;
   private selected: ModuleRecord | null = null;
+  /** Modules flagged for a pending destructive action, drawn in red. */
+  private marked = new Set<string>();
   private linksVisible = true;
   private resizeObserver: ResizeObserver;
   private pointerDown: { x: number; y: number } | null = null;
@@ -170,6 +173,12 @@ export class StationViewer {
     return this.selected;
   }
 
+  /** Draws these modules in red (e.g. while confirming their deletion); an empty list clears it. */
+  setMarked(indices: string[]): void {
+    this.marked = new Set(indices);
+    this.restyle();
+  }
+
   isMacroVisible(macro: string): boolean {
     return !this.hidden.has(macro);
   }
@@ -222,6 +231,7 @@ export class StationViewer {
     this.grid = null;
     this.hovered = null;
     this.selected = null;
+    this.marked.clear();
     this.hidden.clear();
   }
 
@@ -283,7 +293,11 @@ export class StationViewer {
       m.depthWrite = !dimmed;
       r.edges.material.opacity = dimmed ? 0.04 : EDGE_OPACITY;
 
-      if (r === this.selected) {
+      if (this.marked.has(r.entry.index)) {
+        m.emissive.set(MARK_COLOR);
+        m.emissiveIntensity = 0.6;
+        r.edges.material.opacity = 1;
+      } else if (r === this.selected) {
         m.emissive.set(0xffffff);
         m.emissiveIntensity = 0.35;
         r.edges.material.opacity = 1;

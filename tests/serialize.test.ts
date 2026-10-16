@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { removeEntry } from "../src/plan/edit";
+import { removeEntries, sequenceOf } from "../src/plan/edit";
 import { parseConstructionPlans } from "../src/plan/parse";
 import { serializePlans } from "../src/plan/serialize";
 
@@ -17,7 +17,7 @@ describe("serializePlans", () => {
   });
 
   it("round-trips an edited plan", () => {
-    const edited = removeEntry(plan, "2");
+    const edited = removeEntries(plan, sequenceOf(plan, "28"));
     const xml = serializePlans([edited]);
     expect(content(parseConstructionPlans(xml))).toEqual(content([edited]));
     expect(xml).not.toMatch(/\n\s*\n/);
@@ -37,7 +37,7 @@ describe("serializePlans", () => {
     </entry>
   </plan>
 </plans>`);
-    const xml = serializePlans([removeEntry(custom, "2")]);
+    const xml = serializePlans([removeEntries(custom, sequenceOf(custom, "2"))]);
     expect(xml).toContain('custom="1"');
     expect(xml).toContain('<turrets macro="turret_arg_m_laser_01_mk1_macro" exact="2"/>');
     expect(xml).not.toContain('index="2"');

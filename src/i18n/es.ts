@@ -40,6 +40,14 @@ export const es: Messages = {
     emptyDetail: "Haz clic en un módulo del visor.",
     focusModule: "Centrar vista en el módulo",
     deleteModule: "Eliminar módulo",
+    deleteSequence: "Eliminar secuencia ({count} módulos)",
+    deleteSequenceTitle: "¿Eliminar secuencia?",
+    deleteSequenceMessage:
+      "Se eliminarán {name} (#{index}) y los {count} módulos que cuelgan de él, marcados en rojo. No se puede deshacer.",
+    deleteSequenceMessageOne:
+      "Se eliminarán {name} (#{index}) y el módulo que cuelga de él, marcados en rojo. No se puede deshacer.",
+    deleteSequenceConfirm: "Eliminar {count} módulos",
+    cancel: "Cancelar",
     index: "Índice",
     position: "Posición",
     rotation: "Rotación",
