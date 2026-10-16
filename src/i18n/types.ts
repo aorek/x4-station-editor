@@ -21,6 +21,20 @@ export interface Messages {
     production: string;
     selectedModule: string;
     openXml: string;
+    exportXml: string;
+    exportTitle: string;
+    exportCurrent: string;
+    /** `{count}` plans loaded. */
+    exportAll: string;
+    copyXml: string;
+    copied: string;
+    copyFailed: string;
+    saveXml: string;
+    saved: string;
+    downloaded: string;
+    saveFailed: string;
+    xmlFileType: string;
+    close: string;
     fit: string;
     links: string;
     language: string;

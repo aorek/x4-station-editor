@@ -6,6 +6,7 @@ import { parseConstructionPlans } from "./plan/parse";
 import { summarizePlan } from "./plan/summary";
 import type { ConstructionPlan } from "./plan/types";
 import { ContextMenu } from "./ui/contextMenu";
+import { ExportDialog } from "./ui/exportDialog";
 import { panel } from "./ui/panel";
 import { StationViewer } from "./viewer/StationViewer";
 
@@ -14,6 +15,7 @@ panel.renderLocaleSelect(setLocale);
 
 const viewer = new StationViewer(document.getElementById("canvas-host")!);
 const menu = new ContextMenu(document.getElementById("context-menu")!);
+const exportDialog = new ExportDialog(document.getElementById("export-dialog") as HTMLDialogElement);
 let plans: ConstructionPlan[] = [];
 let current: ConstructionPlan | null = null;
 
@@ -82,6 +84,7 @@ onLocaleChange(() => {
   panel.renderLocaleSelect(setLocale);
   panel.showTip(null, 0, 0);
   panel.showError(panel.lastError);
+  exportDialog.refreshTexts();
   if (!current) return;
   panel.renderPlanList(plans, plans.indexOf(current));
   renderSummary(current);
@@ -112,6 +115,9 @@ fileInput.addEventListener("change", async () => {
   fileInput.value = "";
 });
 
+document.getElementById("export-file")!.addEventListener("click", () => {
+  if (current) exportDialog.open(plans, current);
+});
 document.getElementById("fit")!.addEventListener("click", () => viewer.fit());
 document.getElementById("show-links")!.addEventListener("change", (event) => {
   viewer.setLinksVisible((event.target as HTMLInputElement).checked);

@@ -44,4 +44,9 @@ export interface ConstructionPlan {
   name: string;
   description: string;
   entries: PlanEntry[];
+  /**
+   * The `<plan>` element as read from the file. Exports start from it, so they
+   * keep what the viewer does not model (e.g. module loadouts).
+   */
+  source: string;
 }

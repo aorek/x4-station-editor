@@ -83,6 +83,7 @@ export function parseConstructionPlans(xml: string): ConstructionPlan[] {
         name: plan.getAttribute("name") || id,
         description: plan.getAttribute("description") ?? "",
         entries: children(plan, "entry").map(parseEntry),
+        source: new XMLSerializer().serializeToString(plan),
       };
     })
     .filter((plan) => plan.entries.length > 0);
