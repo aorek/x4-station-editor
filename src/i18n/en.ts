@@ -31,6 +31,7 @@ export const en: Messages = {
     fit: "Fit view",
     links: "Connections",
     language: "Language",
+    resizePanel: "Resize panel (double-click to reset)",
     note:
       "Each module is drawn as its bounding box. Positions and rotations come from the plan; dimensions come from " +
       "game data (estimated for unknown modules). Accepts a single plan or the full " +

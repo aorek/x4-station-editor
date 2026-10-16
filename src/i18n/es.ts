@@ -31,6 +31,7 @@ export const es: Messages = {
     fit: "Encuadrar",
     links: "Conexiones",
     language: "Idioma",
+    resizePanel: "Cambiar el ancho del panel (doble clic para restablecer)",
     note:
       "Cada módulo se dibuja como su caja envolvente. Posiciones y rotaciones salen del plano; las medidas, de los " +
       "datos del juego (estimadas si el módulo no se conoce). Admite un plano suelto o el " +

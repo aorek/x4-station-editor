@@ -38,6 +38,7 @@ export interface Messages {
     fit: string;
     links: string;
     language: string;
+    resizePanel: string;
     /** Trusted HTML: may contain markup. */
     note: string;
     hint: string;

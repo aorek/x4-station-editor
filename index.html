@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="app">
-      <aside class="panel">
+      <aside class="panel" id="panel">
         <header>
           <div class="eyebrow" data-i18n="eyebrow"></div>
           <h1 id="plan-name">—</h1>
@@ -58,6 +58,16 @@
 
         <div class="lang" id="lang-select" role="radiogroup" data-i18n-aria-label="language"></div>
       </aside>
+
+      <div
+        class="resizer"
+        id="panel-resizer"
+        role="separator"
+        aria-orientation="vertical"
+        aria-controls="panel"
+        tabindex="0"
+        data-i18n-aria-label="resizePanel"
+      ></div>
 
       <main class="view" id="view">
         <div id="canvas-host"></div>

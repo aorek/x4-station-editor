@@ -9,10 +9,12 @@ import { ConfirmDialog } from "./ui/confirmDialog";
 import { ContextMenu } from "./ui/contextMenu";
 import { ExportDialog } from "./ui/exportDialog";
 import { panel } from "./ui/panel";
+import { makePanelResizable } from "./ui/resizer";
 import { StationViewer } from "./viewer/StationViewer";
 
 applyStaticTexts();
 panel.renderLocaleSelect(setLocale);
+makePanelResizable(document.querySelector(".app")!, document.getElementById("panel-resizer")!);
 
 const viewer = new StationViewer(document.getElementById("canvas-host")!);
 const menu = new ContextMenu(document.getElementById("context-menu")!);
