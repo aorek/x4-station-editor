@@ -4,6 +4,8 @@ A web app for viewing **X4: Foundations** station construction plans in 3D.
 
 Load an exported plan or the full `constructionplans.xml`. The app shows the station with each module drawn as its bounding box, coloured by type. You can orbit the camera and inspect each module: its game name, race, hull, workforce, storage, production per hour, docks, turrets and shields, plus its position, rotation, dimensions and what it is attached to. A summary lists what the station produces per hour and whether its habitats house enough workers.
 
+You can also edit the plan: in the legend, open each module type to show or hide single modules, and right-click a module to center the view on it or delete it. **Export XML…** gives you the edited plan to copy to the clipboard or save as a new file. Anything the viewer does not model (e.g. module loadouts) is kept as it was in the original file.
+
 The interface is available in English and Spanish. It follows the browser language, and a selector in the side panel overrides it.
 
 ## Requirements
@@ -72,6 +74,8 @@ src/
     parse.ts       XML → ConstructionPlan[]
     transform.ts   yaw/pitch/roll and quaternions → quaternion
     summary.ts     Module and production counts
+    edit.ts        Plan edits (delete a module)
+    serialize.ts   ConstructionPlan[] → XML, starting from the original elements
   catalog/
     modules.ts     Category, kind, shape, snaps and stats for each macro
     wares.ts       Recipes and production per hour
@@ -81,6 +85,8 @@ src/
     StationViewer.ts  Three.js scene: modules, links, camera and selection
   ui/
     panel.ts       Side panel
+    contextMenu.ts Right-click menu over the viewer
+    exportDialog.ts  Export dialog: copy or save the XML
   samples/       Sample plans
 scripts/
   extract-game-data.mjs  Extracts module, ware and text data from the game
@@ -99,6 +105,8 @@ tests/           Vitest tests
 
 - Each module is drawn as its bounding box, so L- and T-shaped modules (piers, some storage) look like solid blocks.
 - The yaw/pitch/roll order (Y → X → Z) is checked against the snaps of the sample plan, which only uses yaw and roll of ±90/180°. It has not been verified with pitch or arbitrary angles.
+
+- Deleting a module leaves a gap in the entry indices, and the modules attached to it lose their `<predecessor>`. Exported plans have not been tested in-game yet, so check that X4 accepts them.
 
 ## Next steps
 
