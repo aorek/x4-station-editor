@@ -47,6 +47,8 @@ export class StationViewer {
   onHover: (pick: ModulePick | null, x: number, y: number) => void = () => {};
   /** Called when a module is clicked (or deselected). */
   onSelect: (pick: ModulePick | null) => void = () => {};
+  /** Called on a right-click (without dragging) on a module, after selecting it. */
+  onContextMenu: (pick: ModulePick, x: number, y: number) => void = () => {};
 
   private readonly scene = new THREE.Scene();
   private readonly mirror = new THREE.Group();
@@ -94,8 +96,14 @@ export class StationViewer {
     });
   }
 
-  load(plan: ConstructionPlan): void {
+  /**
+   * Shows a plan. With `keepView` (e.g. after editing the plan) the camera and
+   * hidden modules stay as they were; otherwise the view is reset and framed.
+   */
+  load(plan: ConstructionPlan, { keepView = false } = {}): void {
+    const hidden = new Set(this.hidden);
     this.clear();
+    if (keepView) this.hidden = hidden;
 
     for (const entry of plan.entries) {
       const info = describeModule(entry.macro);
@@ -128,7 +136,7 @@ export class StationViewer {
     this.scene.add(this.grid);
 
     this.restyle();
-    this.fit();
+    if (!keepView) this.fit();
   }
 
   /** Frames the camera on the whole station. */
@@ -326,10 +334,18 @@ export class StationViewer {
     canvas.addEventListener("pointerup", (event) => {
       const start = this.pointerDown;
       this.pointerDown = null;
-      // A drag to orbit the camera does not count as a click.
+      // A drag to orbit or pan the camera does not count as a click.
       if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 4) return;
-      this.select(this.pick(event).record?.entry.index ?? null);
+      const { record, x, y } = this.pick(event);
+      if (event.button === 0) this.select(record?.entry.index ?? null);
+      else if (event.button === 2 && record) {
+        this.select(record.entry.index);
+        this.onContextMenu(record, x, y);
+      }
     });
+
+    // Right-drag pans the camera; the browser menu would only get in the way.
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
   }
 
   private resize(): void {

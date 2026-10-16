@@ -29,6 +29,8 @@ export interface Messages {
     hint: string;
     drop: string;
     emptyDetail: string;
+    focusModule: string;
+    deleteModule: string;
     index: string;
     position: string;
     rotation: string;

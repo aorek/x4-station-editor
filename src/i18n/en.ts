@@ -22,9 +22,11 @@ export const en: Messages = {
       "Each module is drawn as its bounding box. Positions and rotations come from the plan; dimensions come from " +
       "game data (estimated for unknown modules). Accepts a single plan or the full " +
       "<code>constructionplans.xml</code>.",
-    hint: "Drag to rotate · scroll to zoom · right-click to pan",
+    hint: "Drag to rotate · scroll to zoom · right-drag to pan · right-click a module for options",
     drop: "Drop the XML here",
     emptyDetail: "Click a module in the viewer.",
+    focusModule: "Center view on module",
+    deleteModule: "Delete module",
     index: "Index",
     position: "Position",
     rotation: "Rotation",

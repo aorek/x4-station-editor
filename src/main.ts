@@ -1,9 +1,11 @@
 import "./style.css";
 import sampleXml from "./samples/ARG_EnCells_2C.xml?raw";
-import { applyStaticTexts, onLocaleChange, setLocale } from "./i18n";
+import { applyStaticTexts, moduleName, onLocaleChange, setLocale, t } from "./i18n";
+import { removeEntry } from "./plan/edit";
 import { parseConstructionPlans } from "./plan/parse";
 import { summarizePlan } from "./plan/summary";
 import type { ConstructionPlan } from "./plan/types";
+import { ContextMenu } from "./ui/contextMenu";
 import { panel } from "./ui/panel";
 import { StationViewer } from "./viewer/StationViewer";
 
@@ -11,6 +13,7 @@ applyStaticTexts();
 panel.renderLocaleSelect(setLocale);
 
 const viewer = new StationViewer(document.getElementById("canvas-host")!);
+const menu = new ContextMenu(document.getElementById("context-menu")!);
 let plans: ConstructionPlan[] = [];
 let current: ConstructionPlan | null = null;
 
@@ -18,8 +21,29 @@ function goTo(index: string) {
   viewer.select(index, true);
 }
 
-viewer.onHover = (pick, x, y) => panel.showTip(pick, x, y);
+viewer.onHover = (pick, x, y) => {
+  if (!menu.isOpen) panel.showTip(pick, x, y);
+};
 viewer.onSelect = (pick) => panel.renderDetail(pick, current, goTo);
+viewer.onContextMenu = ({ entry, info }, x, y) => {
+  panel.showTip(null, 0, 0);
+  menu.show(
+    moduleName(info),
+    `#${entry.index} · ${entry.macro}`,
+    [
+      { label: t("focusModule"), onSelect: () => goTo(entry.index) },
+      {
+        label: t("deleteModule"),
+        danger: true,
+        // An empty plan has nothing to show; keep at least one module.
+        disabled: (current?.entries.length ?? 0) < 2,
+        onSelect: () => deleteModule(entry.index),
+      },
+    ],
+    x,
+    y,
+  );
+};
 
 function renderSummary(plan: ConstructionPlan) {
   panel.renderSummary(
@@ -32,14 +56,28 @@ function renderSummary(plan: ConstructionPlan) {
 }
 
 function showPlan(plan: ConstructionPlan) {
+  menu.close();
   current = plan;
   viewer.load(plan);
   renderSummary(plan);
   panel.renderDetail(null, plan, goTo);
 }
 
+/** Removes a module from the current plan, keeping the camera and hidden modules. */
+function deleteModule(index: string) {
+  if (!current) return;
+  const plan = removeEntry(current, index);
+  plans[plans.indexOf(current)] = plan;
+  current = plan;
+  viewer.load(plan, { keepView: true });
+  panel.renderPlanList(plans, plans.indexOf(plan));
+  renderSummary(plan);
+  panel.renderDetail(null, plan, goTo);
+}
+
 // Re-render every text in place, keeping the plan, selection and hidden categories.
 onLocaleChange(() => {
+  menu.close();
   applyStaticTexts();
   panel.renderLocaleSelect(setLocale);
   panel.showTip(null, 0, 0);

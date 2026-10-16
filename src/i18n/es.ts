@@ -22,9 +22,11 @@ export const es: Messages = {
       "Cada módulo se dibuja como su caja envolvente. Posiciones y rotaciones salen del plano; las medidas, de los " +
       "datos del juego (estimadas si el módulo no se conoce). Admite un plano suelto o el " +
       "<code>constructionplans.xml</code> completo.",
-    hint: "Arrastra para girar · rueda para zoom · clic derecho para desplazar",
+    hint: "Arrastra para girar · rueda para zoom · arrastra con clic derecho para desplazar · clic derecho en un módulo para más opciones",
     drop: "Suelta el XML aquí",
     emptyDetail: "Haz clic en un módulo del visor.",
+    focusModule: "Centrar vista en el módulo",
+    deleteModule: "Eliminar módulo",
     index: "Índice",
     position: "Posición",
     rotation: "Rotación",
