@@ -135,8 +135,8 @@ export function errorMessage(error: unknown): string {
 
 /**
  * Fills static texts in the page from `data-i18n*` attributes:
- * `data-i18n` (text), `data-i18n-html` (trusted dictionary HTML) and
- * `data-i18n-aria-label`.
+ * `data-i18n` (text), `data-i18n-html` (trusted dictionary HTML),
+ * `data-i18n-aria-label` and `data-i18n-placeholder`.
  */
 export function applyStaticTexts(root: ParentNode = document): void {
   for (const el of root.querySelectorAll<HTMLElement>("[data-i18n]")) {
@@ -147,6 +147,9 @@ export function applyStaticTexts(root: ParentNode = document): void {
   }
   for (const el of root.querySelectorAll<HTMLElement>("[data-i18n-aria-label]")) {
     el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel as UiKey));
+  }
+  for (const el of root.querySelectorAll<HTMLElement>("[data-i18n-placeholder]")) {
+    el.setAttribute("placeholder", t(el.dataset.i18nPlaceholder as UiKey));
   }
   document.documentElement.lang = current;
   document.title = t("title");
