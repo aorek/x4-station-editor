@@ -20,7 +20,7 @@ pnpm install
 pnpm dev
 ```
 
-Open the URL Vite prints (usually http://localhost:5173). The app starts with the sample plan `ARG EnCells 2C`. Use **Open XML…** or drop a file onto the viewer to load another.
+Open the URL Vite prints (usually http://localhost:5173). The app starts with the sample plan `ARG EnCells 2C`. Use **Import XML…** to paste a plan or open a file, or drop a file onto the viewer to load another.
 
 Your plans are stored in:
 
@@ -86,6 +86,7 @@ src/
   ui/
     panel.ts       Side panel
     contextMenu.ts Right-click menu over the viewer
+    importDialog.ts  Import dialog: paste the XML or open a file
     exportDialog.ts  Export dialog: copy or save the XML
   samples/       Sample plans
 scripts/

@@ -8,6 +8,7 @@ import type { ConstructionPlan } from "./plan/types";
 import { ConfirmDialog } from "./ui/confirmDialog";
 import { ContextMenu } from "./ui/contextMenu";
 import { ExportDialog } from "./ui/exportDialog";
+import { ImportDialog } from "./ui/importDialog";
 import { panel } from "./ui/panel";
 import { makePanelResizable } from "./ui/resizer";
 import { StationViewer } from "./viewer/StationViewer";
@@ -20,6 +21,7 @@ const viewer = new StationViewer(document.getElementById("canvas-host")!);
 const menu = new ContextMenu(document.getElementById("context-menu")!);
 const confirmDialog = new ConfirmDialog(document.getElementById("confirm-dialog") as HTMLDialogElement);
 const exportDialog = new ExportDialog(document.getElementById("export-dialog") as HTMLDialogElement);
+const importDialog = new ImportDialog(document.getElementById("import-dialog") as HTMLDialogElement, showPlans);
 let plans: ConstructionPlan[] = [];
 let current: ConstructionPlan | null = null;
 
@@ -112,18 +114,24 @@ onLocaleChange(() => {
   panel.showTip(null, 0, 0);
   panel.showError(panel.lastError);
   exportDialog.refreshTexts();
+  importDialog.refreshTexts();
   if (!current) return;
   panel.renderPlanList(plans, plans.indexOf(current));
   renderSummary(current);
   panel.renderDetail(viewer.selection(), current, goTo);
 });
 
+/** Replaces the loaded plans with the ones in `xml`; throws, keeping the current ones, if it has none. */
+function showPlans(xml: string) {
+  plans = parseConstructionPlans(xml);
+  panel.showError(null);
+  panel.renderPlanList(plans);
+  showPlan(plans[0]);
+}
+
 function loadXml(xml: string) {
   try {
-    plans = parseConstructionPlans(xml);
-    panel.showError(null);
-    panel.renderPlanList(plans);
-    showPlan(plans[0]);
+    showPlans(xml);
   } catch (error) {
     panel.showError(error);
   }
@@ -135,12 +143,7 @@ async function loadFile(file: File | undefined) {
 
 // ---------- Controls ----------
 
-const fileInput = document.getElementById("file-input") as HTMLInputElement;
-document.getElementById("open-file")!.addEventListener("click", () => fileInput.click());
-fileInput.addEventListener("change", async () => {
-  await loadFile(fileInput.files?.[0]);
-  fileInput.value = "";
-});
+document.getElementById("import-file")!.addEventListener("click", () => importDialog.open());
 
 document.getElementById("export-file")!.addEventListener("click", () => {
   if (current) exportDialog.open(plans, current);

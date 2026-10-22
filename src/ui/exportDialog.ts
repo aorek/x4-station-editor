@@ -28,7 +28,7 @@ export class ExportDialog {
   constructor(private readonly root: HTMLDialogElement) {
     this.text = root.querySelector("textarea")!;
     this.scopes = root.querySelector(".export-scope")!;
-    this.status = root.querySelector(".export-status")!;
+    this.status = root.querySelector(".dialog-status")!;
     root.querySelector(".export-copy")!.addEventListener("click", () => void this.copy());
     root.querySelector(".export-save")!.addEventListener("click", () => void this.save());
     // Clicks on the backdrop land on the dialog itself.

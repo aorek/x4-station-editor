@@ -20,7 +20,11 @@ export interface Messages {
     showModules: string;
     production: string;
     selectedModule: string;
-    openXml: string;
+    importXml: string;
+    importTitle: string;
+    pasteXml: string;
+    openFile: string;
+    loadXml: string;
     exportXml: string;
     exportTitle: string;
     exportCurrent: string;
